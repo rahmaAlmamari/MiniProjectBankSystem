@@ -2,9 +2,9 @@
 {
     internal class Program
     {
-        //========== 1. Globle varaibles =========
+        //============================== 1. Globle varaibles ===================
 
-        //========== 2. Main method ===========
+        //============================== 2. Main method ========================
         static void Main(string[] args)
         {
             //to call WelcomeMessage method ...
@@ -45,7 +45,7 @@
 
         }
 
-        //========== 3. EndUser menu ===========
+        //============================== 3. EndUser menu =======================
         public static void EndUserMenu()
         {
             //to keep the EndUserMenu method runs until user choose to closed it ...
@@ -97,14 +97,54 @@
             }
         }
 
-        //========== 4. Admain menu ==========
+        //============================== 4. Admain menu ========================
         public static void AdmainMenu()
         {
-            Console.WriteLine("adminMenu");
-            Console.ReadLine();
+            //to keep the AdmainMenu method runs until user choose to closed it ...
+            bool AdmainMenuRun = true;//to stop the AdmainMenu method ...
+            while (AdmainMenuRun)
+            {
+                Console.Clear();//to clear the screen ...
+                Console.WriteLine("1. View reguests accounts opening");
+                Console.WriteLine("2. View opinging accounts in the system");
+                Console.WriteLine("3. View all review in the system");
+                Console.WriteLine("4. Process requests");
+                Console.WriteLine("0. Exsit");
+                //to call CharValidation to get and validate user input ...
+                char AdmainMenuRunOption = CharValidation("option");
+                //to run the option user want ...
+                switch (AdmainMenuRunOption)
+                {
+                    case '1'://to call ViewReguestsAccountsOpening method ...
+                        ViewReguestsAccountsOpening();
+                        break;
+
+                    case '2'://to call ViewOpingingAccounts method ...
+                        ViewOpingingAccounts();
+                        break;
+
+                    case '3'://to call ViewAllReview method ...
+                        ViewAllReview();
+                        break;
+
+                    case '4'://to call ProcessRequests method ...
+                        ProcessRequests();
+                        break;
+
+                    case '0'://to exsit AdmainMenuRun ...
+                        AdmainMenuRun = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        Console.ReadLine();//just to hoad second ...
+                        break;
+                }
+
+            }
         }
 
-        //========== 5. EndUser use case ==========
+        //============================== 5. EndUser use case ===================
         //5.1. Reguest account opening ...
         public static void ReguestAccountOpening()
         {
@@ -136,9 +176,33 @@
             Console.ReadLine();
         }
 
-        //========== 6. Admain use case ==========
+        //============================ 6. Admain use case =======================
+        //6.1. View reguests accounts opening ...
+        public static void ViewReguestsAccountsOpening()
+        {
+            Console.WriteLine("ViewReguestsAccountsOpening");
+            Console.ReadLine();
+        }
+        //6.2. View opinging accounts ...
+        public static void ViewOpingingAccounts()
+        {
+            Console.WriteLine("ViewOpingingAccounts");
+            Console.ReadLine();
+        }
+        //6.3. View all review ...
+        public static void ViewAllReview()
+        {
+            Console.WriteLine("ViewAllReview");
+            Console.ReadLine();
+        }
+        //6.4. Process requests ...
+        public static void ProcessRequests()
+        {
+            Console.WriteLine("ProcessRequests");
+            Console.ReadLine();
+        }
 
-        //========== 7. Addtional methods ===========
+        //============================ 7. Addtional methods ======================
         //7.1. WelcomeMessage method ...
         public static void WelcomeMessage()
         {
