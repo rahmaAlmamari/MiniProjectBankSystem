@@ -121,7 +121,7 @@ namespace MiniProjectBankSystem
             while (AdmainMenuRun)
             {
                 Console.Clear();//to clear the screen ...
-                Console.WriteLine("1. View reguests accounts opening");
+                Console.WriteLine("1. Approve reguests accounts opening");
                 Console.WriteLine("2. View opinging accounts in the system");
                 Console.WriteLine("3. View all review in the system");
                 Console.WriteLine("4. Process requests");
@@ -132,7 +132,7 @@ namespace MiniProjectBankSystem
                 switch (AdmainMenuRunOption)
                 {
                     case '1'://to call ViewReguestsAccountsOpening method ...
-                        ViewReguestsAccountsOpening();
+                        ApproveReguestsAccountsOpening();
                         break;
 
                     case '2'://to call ViewOpingingAccounts method ...
@@ -210,8 +210,8 @@ namespace MiniProjectBankSystem
         }
 
         //============================ 6. Admain use case =======================
-        //6.1. View reguests accounts opening ...
-        public static void ViewReguestsAccountsOpening()
+        //6.1. Approve reguests accounts opening ...
+        public static void ApproveReguestsAccountsOpening()
         {
             //to check if there are request or not ...
             if(createAccountRequests.Count == 0)
