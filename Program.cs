@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MiniProjectBankSystem
 {
@@ -12,6 +14,11 @@ namespace MiniProjectBankSystem
         static int LastAccountNumber;
         //1.3. createAccountRequests queue ...
         static Queue<string> createAccountRequests = new Queue<string>();
+        //1.4. lists to store user data (parallel)
+        static List<int> accountNumbers = new List<int>();
+        static List<string> accountUserNames = new List<string>();
+        static List<string> nationalID = new List<string>();
+        static List<double> balances = new List<double>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -206,8 +213,39 @@ namespace MiniProjectBankSystem
         //6.1. View reguests accounts opening ...
         public static void ViewReguestsAccountsOpening()
         {
-            Console.WriteLine("ViewReguestsAccountsOpening");
-            Console.ReadLine();
+            //to check if there are request or not ...
+            if(createAccountRequests.Count == 0)
+            {
+                Console.WriteLine("There is no request submited yet");
+                Console.ReadLine();//just to hoald second ...
+                return;//to stop the method ...
+            }
+            //to get first request submited to createAccountRequests queue ...
+            string request = createAccountRequests.Dequeue();
+            string[] RequestDteials = request.Split('|').ToArray();
+            //to display the first request in the queue ...
+            Console.WriteLine("The first request in queue:");
+            Console.WriteLine($"User Name: {RequestDteials[0]}\n" +
+                              $"User National ID: {RequestDteials[1]}\n" +
+                              $"Initial Balance: {RequestDteials[2]}");
+            bool action = ConfirmAction("approved this request");
+            if (action)
+            {
+                //to set newAccountNumber ...
+                int newAccountNumber = LastAccountNumber + 1;
+                accountNumbers.Add(newAccountNumber);
+                LastAccountNumber = newAccountNumber;
+
+                accountUserNames.Add(RequestDteials[0]);
+                nationalID.Add(RequestDteials[1]);
+                balances.Add(Convert.ToDouble(RequestDteials[2]));//to convert RequestDteials from string to double ...
+
+                Console.WriteLine($"Account created successfully for: {RequestDteials[0]}\n" +
+                    $" with Account Number: {newAccountNumber}");
+                Console.ReadLine();//just to hoald second ...
+
+            }
+
         }
         //6.2. View opinging accounts ...
         public static void ViewOpingingAccounts()
@@ -357,9 +395,42 @@ namespace MiniProjectBankSystem
             }
             return IsValide;
         }
+        //8.4. ConfirmAction method ...
+        public static bool ConfirmAction(string action)
+        {
+            //confirm process ...
+            bool flag_action;//to know if the user enter choice or not
+            char actionChoice = 'y';
+            bool actionStatus;//to set the confirm action status true/false ...
+            do
+            {
+                flag_action = false;
+                try
+                {
+                    Console.WriteLine($"“Are you sure to {action} ? Y/N");
+                    actionChoice = char.Parse(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Please confirm your action");
+                    flag_action = true;
+                }
+            } while (flag_action);
+
+            if (actionChoice == 'Y' || actionChoice == 'y')
+            {
+                actionStatus = true;
+            }
+            else
+            {
+                actionStatus = false;
+            }
+
+            return actionStatus;
+        }
 
 
-        
+
 
     }
 }
