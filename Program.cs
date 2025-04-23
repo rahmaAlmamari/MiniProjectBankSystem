@@ -250,8 +250,22 @@ namespace MiniProjectBankSystem
         //6.2. View opinging accounts ...
         public static void ViewOpingingAccounts()
         {
-            Console.WriteLine("ViewOpingingAccounts");
-            Console.ReadLine();
+            //to check if there is opened accounts or not ...
+            if(accountNumbers.Count == 0)
+            {
+                Console.WriteLine("There is no opened accounts yet");
+                Console.ReadLine();//just to hoald second ...
+                return;//to stop the method ...
+            }
+            //to display all opened accounts ...
+            Console.WriteLine("Accounts information:");
+            Console.WriteLine("Account No \t|\t User Name \t|\t National ID \t|\t Balance");
+            for(int i = 0; i < accountNumbers.Count; i++)
+            {
+                Console.WriteLine($"{accountNumbers[i]} \t|\t {accountUserNames[i]} " +
+                                  $"\t|\t {nationalID[i]} \t|\t {balances[i]}");
+            }
+            Console.ReadLine();//just to hoald second ...
         }
         //6.3. View all review ...
         public static void ViewAllReview()
