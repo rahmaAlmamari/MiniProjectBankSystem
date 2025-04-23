@@ -1,8 +1,17 @@
-﻿namespace MiniProjectBankSystem
+﻿using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
+namespace MiniProjectBankSystem
 {
     internal class Program
     {
         //============================== 1. Globle varaibles ===================
+        //1.1. MinimumBalance Constant ...
+        const double MinimumBalance = 100.0;
+        //1.2. Account number generator
+        static int LastAccountNumber;
+        //1.3. createAccountRequests queue ...
+        static Queue<string> createAccountRequests = new Queue<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -148,8 +157,25 @@
         //5.1. Reguest account opening ...
         public static void ReguestAccountOpening()
         {
-            Console.WriteLine("ReguestAccountOpening");
+            //to get the input from the user ...
+            string UserName = StringNamingValidation("name");//to get and validate UserName input ...
+            string UserNationalID = StringValidation("national ID");//to get and validate UserNationalID input ...
+            bool BalanceIsValide;
+            double InitialBalance;
+            do
+            {
+                InitialBalance = DoubleValidation("initial balance");//to get and validate InitialBalance input ...
+                BalanceIsValide = CheckBalanceEqualsMinimumBalance(InitialBalance);//to check if InitialBalance > MinimumBalance or not ...
+            } while (!BalanceIsValide);
+            //to combain all the input together and store it in createAccountRequests queue ...
+            string request = UserName + "|" + UserNationalID+"|"+ InitialBalance;
+            createAccountRequests.Enqueue(request);
+            int num = createAccountRequests.Count();
+            Console.WriteLine("Your request submited successfully");
+            Console.WriteLine("Their is "+ num +" request");
             Console.ReadLine();
+
+
         }
         //5.2. Deposite money ...
         public static void DepositeMoney()
@@ -202,16 +228,8 @@
             Console.ReadLine();
         }
 
-        //============================ 7. Addtional methods ======================
-        //7.1. WelcomeMessage method ...
-        public static void WelcomeMessage()
-        {
-            Console.WriteLine("Welcome to Codeline Bank System\nWe hope you have a pleasant time using our services " +
-                              "(^0^)\nPress enter key to go to the menu screen");
-            //just to hold a second ...
-            Console.ReadLine();
-        }
-        //7.2. CharValidation method ...
+        //============================ 7. Validation =============================
+        //7.1. CharValidation method ...
         public static char CharValidation(string message)
         {
             bool CharFlag;//to handle user char error input ...
@@ -221,12 +239,12 @@
                 try
                 {
                     CharFlag = false;
-                    Console.WriteLine($"Please enter your {message}:");
+                    Console.WriteLine($"Enter your {message}:");
                     CharInput = char.Parse(Console.ReadLine());
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Your option not accepted due to: " + e.Message);
+                    Console.WriteLine($"Your {message} not accepted due to: " + e.Message);
                     CharFlag = true;
                 }
 
@@ -235,6 +253,113 @@
             //to return tne char input ...
             return CharInput;
         }
+        //7.2. StringNamingValidation method ...
+        public static string StringNamingValidation(string message)
+        {
+            bool StringNamingFlag;//to handle user StringNaming error input ...
+            string StringNamingInput = "null";
+            do
+            {
+                StringNamingFlag = false;
+                Console.WriteLine($"Enter your {message}:");
+                StringNamingInput = Console.ReadLine();
+                //to check if StringNamingInput has number or not ...
+                bool check_StringNaming = IsAlpha(StringNamingInput);
+                if (check_StringNaming == false)
+                {
+                    Console.WriteLine($"{message} can not contains number and con not be null ..." +
+                                      "please prass enter key to try again");
+                    Console.ReadLine();//just to hoad second ...
+                    StringNamingFlag = true;
+                }
+
+            } while (StringNamingFlag);
+
+            //to return tne char input ...
+            return StringNamingInput;
+        }
+        //7.3. StringValidation method ...
+        public static string StringValidation(string message)
+        {
+            bool StringFlag;//to handle user StringNaming error input ...
+            string StringInput = "null";
+            do
+            {
+                StringFlag = false;
+                Console.WriteLine($"Enter your {message}:");
+                StringInput = Console.ReadLine();
+                // Check if StringInput null or empty
+                if (string.IsNullOrWhiteSpace(StringInput))
+                {
+                    Console.WriteLine($"{message} cannot be empty. Please prass enter key to try again");
+                    Console.ReadLine();//just to hoad second ...
+                    StringFlag = true;
+                }
+
+            } while (StringFlag);
+
+            //to return tne char input ...
+            return StringInput;
+        }
+        //7.4. DoubleValidation method ...
+        public static double DoubleValidation(string message)
+        {
+            bool DoubleFlag;//to handle user StringNaming error input ...
+            double DoubleInput = 0;
+            do
+            {
+                DoubleFlag = false;
+                try
+                {
+                    Console.WriteLine($"Enter your {message}:");
+                    DoubleInput = double.Parse(Console.ReadLine());
+                }catch(Exception e)
+                {
+                    Console.WriteLine($"{message} not accepted due to " + e.Message);
+                    Console.WriteLine("please prass enter key to try again");
+                    Console.ReadLine();
+                    DoubleFlag = true;
+                }
+         
+            } while (DoubleFlag);
+            //to return tne char input ...
+            return DoubleInput;
+        }
+        //============================ 8. Addtional methods ======================
+        //8.1. WelcomeMessage method ...
+        public static void WelcomeMessage()
+        {
+            Console.WriteLine("Welcome to Codeline Bank System\nWe hope you have a pleasant time using our services " +
+                              "(^0^)\nPress enter key to go to the menu screen");
+            //just to hold a second ...
+            Console.ReadLine();
+        }
+        //8.2. To check of the string contains something other than letters like number and empty space(this methos return true or false)....
+        static bool IsAlpha(string input)
+        {
+            return Regex.IsMatch(input, "^[a-zA-Z]+$");
+        }
+        //8.3. Check if balance == MinimumBalance ...
+        public static bool CheckBalanceEqualsMinimumBalance(double value)
+        {
+            bool IsValide;
+            if(value < MinimumBalance)
+            {
+                IsValide = false;
+                Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}" +
+                    $"\n please prass enter key to try again");
+                Console.ReadLine();//just to hoad a second ...
+                
+            }
+            else
+            {
+                IsValide = true;
+            }
+            return IsValide;
+        }
+
+
+        
 
     }
 }
