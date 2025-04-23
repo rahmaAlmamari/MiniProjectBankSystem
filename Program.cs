@@ -10,7 +10,7 @@
             //to call WelcomeMessage method ...
             WelcomeMessage();
             //to keep the system runs until user choose to closed the system ...
-            bool MainRun = true;//to get the user option ...
+            bool MainRun = true;//to stop main method ...
             while (MainRun)
             {
                 Console.Clear();//to clear the screen ...
@@ -30,8 +30,8 @@
                         AdmainMenu();
                         break;
 
-                    case '0'://to call Exsit method ...
-                        Exsit();
+                    case '0'://to exsit Main ...
+                        Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;
                         break;
 
@@ -48,8 +48,53 @@
         //========== 3. EndUser menu ===========
         public static void EndUserMenu()
         {
-            Console.WriteLine("userMenu");
-            Console.ReadLine();
+            //to keep the EndUserMenu method runs until user choose to closed it ...
+            bool EndUserMenuRun = true;//to stop the EndUserMenu method ...
+            while (EndUserMenuRun)
+            {
+                Console.Clear();//to clear the screen ...
+                Console.WriteLine("1. Reguest account opening");
+                Console.WriteLine("2. Deposite money");//to put money to your account ...
+                Console.WriteLine("3. Withdraw money");//to take money from your account ...
+                Console.WriteLine("4. Check balance");//to know how much in your account ...
+                Console.WriteLine("5. Submit review");//to submit message with what you like and what not to the admin ...
+                Console.WriteLine("0. Exsit");
+                //to call CharValidation to get and validate user input ...
+                char EndUserMenuOption = CharValidation("option");
+                //to run the option user want ...
+                switch (EndUserMenuOption)
+                {
+                    case '1'://to call ReguestAccountOpening method ...
+                        ReguestAccountOpening();
+                        break;
+
+                    case '2'://to call DepositeMoney method ...
+                        DepositeMoney();
+                        break;
+
+                    case '3'://to call WithdrawMoney method ...
+                        WithdrawMoney();
+                        break;
+
+                    case '4'://to call CheckBalance method ...
+                        CheckBalance();
+                        break;
+
+                    case '5'://to call SubmitReview method ...
+                        SubmitReview();
+                        break;
+
+                    case '0'://to exsit EndUserMenu ...
+                        EndUserMenuRun = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        Console.ReadLine();//just to hoad second ...
+                        break;
+                }
+
+            }
         }
 
         //========== 4. Admain menu ==========
@@ -60,6 +105,36 @@
         }
 
         //========== 5. EndUser use case ==========
+        //5.1. Reguest account opening ...
+        public static void ReguestAccountOpening()
+        {
+            Console.WriteLine("ReguestAccountOpening");
+            Console.ReadLine();
+        }
+        //5.2. Deposite money ...
+        public static void DepositeMoney()
+        {
+            Console.WriteLine("DepositeMoney");
+            Console.ReadLine();
+        }
+        //5.3. Withdraw money ...
+        public static void WithdrawMoney()
+        {
+            Console.WriteLine("WithdrawMoney");
+            Console.ReadLine();
+        }
+        //5.4. Check balance ...
+        public static void CheckBalance()
+        {
+            Console.WriteLine("CheckBalance");
+            Console.ReadLine();
+        }
+        //5.5. Submit review ...
+        public static void SubmitReview()
+        {
+            Console.WriteLine("SubmitReview");
+            Console.ReadLine();
+        }
 
         //========== 6. Admain use case ==========
 
@@ -95,11 +170,6 @@
 
             //to return tne char input ...
             return CharInput;
-        }
-        //7.3. Exsit method ...
-        public static void Exsit()
-        {
-            Console.WriteLine("Have a nice day (^0^)");
         }
 
     }
