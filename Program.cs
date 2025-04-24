@@ -123,30 +123,30 @@ namespace MiniProjectBankSystem
             while (AdmainMenuRun)
             {
                 Console.Clear();//to clear the screen ...
-                Console.WriteLine("1. Approve reguests accounts opening");
-                Console.WriteLine("2. View opinging accounts in the system");
-                Console.WriteLine("3. View all review in the system");
-                Console.WriteLine("4. Process requests");
+                Console.WriteLine("1. View requests");
+                Console.WriteLine("2. Approve reguests accounts opening");
+                Console.WriteLine("3. View opinging accounts in the system");
+                Console.WriteLine("4. View all review in the system");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
                 //to run the option user want ...
                 switch (AdmainMenuRunOption)
                 {
-                    case '1'://to call ViewReguestsAccountsOpening method ...
+                    case '1'://to call ProcessRequests method ...
+                        ViewRequests();
+                        break;
+
+                    case '2'://to call ViewReguestsAccountsOpening method ...
                         ApproveReguestsAccountsOpening();
                         break;
 
-                    case '2'://to call ViewOpingingAccounts method ...
+                    case '3'://to call ViewOpingingAccounts method ...
                         ViewOpingingAccounts();
                         break;
 
-                    case '3'://to call ViewAllReview method ...
+                    case '4'://to call ViewAllReview method ...
                         ViewAllReview();
-                        break;
-
-                    case '4'://to call ProcessRequests method ...
-                        ProcessRequests();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -216,7 +216,13 @@ namespace MiniProjectBankSystem
         }
 
         //============================ 6. Admain use case =======================
-        //6.1. Approve reguests accounts opening ...
+        //6.1. Process requests ...
+        public static void ViewRequests()
+        {
+            Console.WriteLine("ProcessRequests");
+            Console.ReadLine();
+        }
+        //6.2. Approve reguests accounts opening ...
         public static void ApproveReguestsAccountsOpening()
         {
             //to check if there are request or not ...
@@ -253,7 +259,7 @@ namespace MiniProjectBankSystem
             }
 
         }
-        //6.2. View opinging accounts ...
+        //6.3. View opinging accounts ...
         public static void ViewOpingingAccounts()
         {
             //to check if there is opened accounts or not ...
@@ -273,7 +279,7 @@ namespace MiniProjectBankSystem
             }
             HoldScreen();//to hold the screen ...
         }
-        //6.3. View all review ...
+        //6.4. View all review ...
         public static void ViewAllReview()
         {
            //to check if there is review submited or not ...
@@ -290,12 +296,6 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("----------------------");
             }
             HoldScreen();//to hold the screen ...
-        }
-        //6.4. Process requests ...
-        public static void ProcessRequests()
-        {
-            Console.WriteLine("ProcessRequests");
-            Console.ReadLine();
         }
 
         //============================ 7. Validation =============================
