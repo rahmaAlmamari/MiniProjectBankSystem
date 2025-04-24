@@ -55,7 +55,7 @@ namespace MiniProjectBankSystem
 
                     default:
                         Console.WriteLine("Invalid choice.");
-                        Console.ReadLine();//just to hoad second ...
+                        HoldScreen();//to hold the screen ...
                         break;
                 }
                 
@@ -108,7 +108,7 @@ namespace MiniProjectBankSystem
 
                     default:
                         Console.WriteLine("Invalid choice.");
-                        Console.ReadLine();//just to hoad second ...
+                        HoldScreen();//to hold the screen ...
                         break;
                 }
 
@@ -155,7 +155,7 @@ namespace MiniProjectBankSystem
 
                     default:
                         Console.WriteLine("Invalid choice.");
-                        Console.ReadLine();//just to hoad second ...
+                        HoldScreen();//to hold the screen ...
                         break;
                 }
 
@@ -182,7 +182,7 @@ namespace MiniProjectBankSystem
             int num = createAccountRequests.Count();
             Console.WriteLine("Your request submited successfully");
             Console.WriteLine("Their is "+ num +" request");
-            Console.ReadLine();
+            HoldScreen();//to hold the screen ...
 
 
         }
@@ -212,7 +212,7 @@ namespace MiniProjectBankSystem
             //to store the review in the reviewsStack ...
             reviewsStack.Push(review);
             Console.WriteLine("Your review submited successfully");
-            Console.ReadLine();//just to hoad a second ...
+            HoldScreen();//to hold the screen ...
         }
 
         //============================ 6. Admain use case =======================
@@ -223,7 +223,7 @@ namespace MiniProjectBankSystem
             if(createAccountRequests.Count == 0)
             {
                 Console.WriteLine("There is no request submited yet");
-                Console.ReadLine();//just to hoald second ...
+                HoldScreen();//to hold the screen ...
                 return;//to stop the method ...
             }
             //to get first request submited to createAccountRequests queue ...
@@ -248,7 +248,7 @@ namespace MiniProjectBankSystem
 
                 Console.WriteLine($"Account created successfully for: {RequestDteials[0]}\n" +
                     $" with Account Number: {newAccountNumber}");
-                Console.ReadLine();//just to hoald second ...
+                HoldScreen();//to hold the screen ...
 
             }
 
@@ -260,7 +260,7 @@ namespace MiniProjectBankSystem
             if(accountNumbers.Count == 0)
             {
                 Console.WriteLine("There is no opened accounts yet");
-                Console.ReadLine();//just to hoald second ...
+                HoldScreen();//to hold the screen ...
                 return;//to stop the method ...
             }
             //to display all opened accounts ...
@@ -271,13 +271,25 @@ namespace MiniProjectBankSystem
                 Console.WriteLine($"{accountNumbers[i]} \t|\t {accountUserNames[i]} " +
                                   $"\t|\t {nationalID[i]} \t|\t {balances[i]}");
             }
-            Console.ReadLine();//just to hoald second ...
+            HoldScreen();//to hold the screen ...
         }
         //6.3. View all review ...
         public static void ViewAllReview()
         {
-            Console.WriteLine("ViewAllReview");
-            Console.ReadLine();
+           //to check if there is review submited or not ...
+           if(reviewsStack.Count == 0)
+            {
+                Console.WriteLine("There is no review submited yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method .
+            }
+            //to display all the review submited to the reviewsStack ...
+            foreach(string review in reviewsStack)
+            {
+                Console.WriteLine($"{review}");
+                Console.WriteLine("----------------------");
+            }
+            HoldScreen();//to hold the screen ...
         }
         //6.4. Process requests ...
         public static void ProcessRequests()
@@ -383,14 +395,14 @@ namespace MiniProjectBankSystem
             //to return tne char input ...
             return DoubleInput;
         }
+
         //============================ 8. Addtional methods ======================
         //8.1. WelcomeMessage method ...
         public static void WelcomeMessage()
         {
             Console.WriteLine("Welcome to Codeline Bank System\nWe hope you have a pleasant time using our services " +
                               "(^0^)\nPress enter key to go to the menu screen");
-            //just to hold a second ...
-            Console.ReadLine();
+            HoldScreen();//to hold the screen ...
         }
         //8.2. To check of the string contains something other than letters like number and empty space(this methos return true or false)....
         static bool IsAlpha(string input)
@@ -406,8 +418,8 @@ namespace MiniProjectBankSystem
                 IsValide = false;
                 Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}" +
                     $"\n please prass enter key to try again");
-                Console.ReadLine();//just to hoad a second ...
-                
+                HoldScreen();//to hold the screen ...
+
             }
             else
             {
@@ -447,6 +459,12 @@ namespace MiniProjectBankSystem
             }
 
             return actionStatus;
+        }
+        //8.5. To hoad the screen ...
+        public static void HoldScreen()
+        {
+            Console.WriteLine("Press (Enter Kay) to continue");
+            Console.ReadLine();
         }
 
 
