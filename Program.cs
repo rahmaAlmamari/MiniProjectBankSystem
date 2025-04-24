@@ -203,8 +203,34 @@ namespace MiniProjectBankSystem
             else
             {
                 //to do the process of deposite money ...
-                double MoneyAmount = DoubleValidation("money amount to deposite");
-
+                double DepositeMoney = DoubleValidation("money amount to deposite");
+                //get account money amount using check balance ... do it after login ...
+                //to get money amount in the account ... it will be in the balance leater ...
+                double AccountMoney = 0;
+                int index = 0;
+                for(int i = 0; i < accountNumbers.Count; i++)
+                {
+                    if (accountNumbers[i] == AccountNumber)
+                    {
+                        AccountMoney = balances[i];
+                        index = i;
+                        break;//to stop the loop and save the time ...
+                    }
+                }
+                double Deposite = AccountMoney - DepositeMoney;
+                bool IsValid = CheckBalanceEqualsMinimumBalance(Deposite);
+                if (!IsValid)
+                {
+                    Console.WriteLine("Sorry your deposite process is not complete");
+                    HoldScreen();//just to hold the screen ...
+                }
+                else
+                {
+                    balances[index] = Deposite;
+                    Console.WriteLine($"Your deposite process done successfully.\n" +
+                                      $"Your new balance is: {Deposite}");
+                    HoldScreen();//just to hold the screen ...
+                }
             }
         }
         //5.3. Withdraw money ...
@@ -454,8 +480,7 @@ namespace MiniProjectBankSystem
             if (value < MinimumBalance)
             {
                 IsValide = false;
-                Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}" +
-                    $"\n please prass enter key to try again");
+                Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}");
                 HoldScreen();//to hold the screen ...
 
             }
