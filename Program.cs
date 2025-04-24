@@ -274,9 +274,30 @@ namespace MiniProjectBankSystem
         //5.4. Check balance ...
         public static void CheckBalance()
         {
-            Console.WriteLine("CheckBalance");
-            Console.ReadLine();
-        }
+            //to enter the account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry the account number you entered is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            { 
+                for(int i = 0; i < accountNumbers.Count; i++)
+                {
+                    if(AccountNumber == accountNumbers[i])
+                    {
+                        Console.WriteLine($"Your account balance is: {balances[i]}");
+                        HoldScreen();
+                        return;//to stop the method ...
+                    }
+                }
+            }
+            }//to know how much in your account ...
         //5.5. Submit review ...
         public static void SubmitReview()
         {
@@ -286,7 +307,7 @@ namespace MiniProjectBankSystem
             reviewsStack.Push(review);
             Console.WriteLine("Your review submited successfully");
             HoldScreen();//to hold the screen ...
-        }
+        }//to submit message with what you like and what not to the admin ...
 
         //============================ 6. Admain use case =======================
         //6.1. Process requests ...
