@@ -236,8 +236,49 @@ namespace MiniProjectBankSystem
         //5.3. Withdraw money ...
         public static void WithdrawMoney()
         {
-            Console.WriteLine("WithdrawMoney");
-            Console.ReadLine();
+            //to enter the account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry the account number you entered is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                //to do the process of deposite money ...
+                double DepositeMoney = DoubleValidation("money amount to deposite");
+                //get account money amount using check balance ... do it after login ...
+                //to get money amount in the account ... it will be in the balance leater ...
+                double AccountMoney = 0;
+                int index = 0;
+                for (int i = 0; i < accountNumbers.Count; i++)
+                {
+                    if (accountNumbers[i] == AccountNumber)
+                    {
+                        AccountMoney = balances[i];
+                        index = i;
+                        break;//to stop the loop and save the time ...
+                    }
+                }
+                double Deposite = AccountMoney - DepositeMoney;
+                bool IsValid = CheckBalanceEqualsMinimumBalance(Deposite);
+                if (!IsValid)
+                {
+                    Console.WriteLine("Sorry your deposite process is not complete");
+                    HoldScreen();//just to hold the screen ...
+                }
+                else
+                {
+                    balances[index] = Deposite;
+                    Console.WriteLine($"Your deposite process done successfully.\n" +
+                                      $"Your new balance is: {Deposite}");
+                    HoldScreen();//just to hold the screen ...
+                }
+            }
         }
         //5.4. Check balance ...
         public static void CheckBalance()
