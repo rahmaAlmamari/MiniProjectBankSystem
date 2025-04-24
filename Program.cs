@@ -19,6 +19,8 @@ namespace MiniProjectBankSystem
         static List<string> accountUserNames = new List<string>();
         static List<string> nationalID = new List<string>();
         static List<double> balances = new List<double>();
+        //1.5. reviewsStack stack ...
+        static Stack<string> reviewsStack = new Stack<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -205,8 +207,12 @@ namespace MiniProjectBankSystem
         //5.5. Submit review ...
         public static void SubmitReview()
         {
-            Console.WriteLine("SubmitReview");
-            Console.ReadLine();
+            //to get the review input from the user ...
+            string review = StringValidation("review");//to validate the review ...
+            //to store the review in the reviewsStack ...
+            reviewsStack.Push(review);
+            Console.WriteLine("Your review submited successfully");
+            Console.ReadLine();//just to hoad a second ...
         }
 
         //============================ 6. Admain use case =======================
