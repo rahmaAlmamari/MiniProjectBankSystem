@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic;//to deal with list, stack and queue ...
+using System.IO;//to import Input output backage to deal with files ...
 
 namespace MiniProjectBankSystem
 {
@@ -21,12 +22,23 @@ namespace MiniProjectBankSystem
         static List<double> balances = new List<double>();
         //1.5. reviewsStack stack ...
         static Stack<string> reviewsStack = new Stack<string>();
+        //1.6. AccountsFilePath to store accounts.txt path
+        //where we will store account information 
+        const string AccountsFilePath = "accounts.txt";
+        //1.7. ReviewsFilePath to store reviews.txt path
+        //where we will store review details 
+        const string ReviewsFilePath = "reviews.txt";
+        //1.8. RequestsFilePath to store requests.txt path
+        //where we will store request details 
+        const string RequestsFilePath = "requests.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
         {
             //to call WelcomeMessage method ...
             WelcomeMessage();
+            //to load the accounts information from the file and store it into the lists ...
+            LoadAccountsInformationFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -610,7 +622,50 @@ namespace MiniProjectBankSystem
             Console.WriteLine("Press (Enter Kay) to continue");
             Console.ReadLine();
         }
+        //8.5. LoadAccountsInformationFromFile method ...
+        static void LoadAccountsInformationFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(AccountsFilePath))
+                {
+                    Console.WriteLine("Sorry ... no saved data found in accounts.txt file.");
+                    HoldScreen();//to hold a second ...
+                    return;//to stop the method ...
+                }
+                //to make sure that our lists are clear ...
+                accountNumbers.Clear();
+                accountUserNames.Clear();
+                nationalID.Clear();
+                balances.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(AccountsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(',');
+                        int accNum = Convert.ToInt32(parts[0]);//to convert from string to int ...
+                        //to add the information to the lists ...
+                        accountNumbers.Add(accNum);
+                        accountUserNames.Add(parts[1]);
+                        nationalID.Add(parts[2]);
+                        balances.Add(Convert.ToDouble(parts[3]));
 
+                        if (accNum > LastAccountNumber)
+                            LastAccountNumber = accNum;
+                    }
+                }
+                Console.WriteLine("Accounts loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading file.");
+                HoldScreen();
+            }
+        }
 
 
 
