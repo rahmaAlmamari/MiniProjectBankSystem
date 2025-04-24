@@ -217,20 +217,11 @@ namespace MiniProjectBankSystem
                         break;//to stop the loop and save the time ...
                     }
                 }
-                double Deposite = AccountMoney - DepositeMoney;
-                bool IsValid = CheckBalanceEqualsMinimumBalance(Deposite);
-                if (!IsValid)
-                {
-                    Console.WriteLine("Sorry your deposite process is not complete");
-                    HoldScreen();//just to hold the screen ...
-                }
-                else
-                {
-                    balances[index] = Deposite;
-                    Console.WriteLine($"Your deposite process done successfully.\n" +
-                                      $"Your new balance is: {Deposite}");
-                    HoldScreen();//just to hold the screen ...
-                }
+                double Deposite = AccountMoney + DepositeMoney;
+                balances[index] = Deposite;
+                Console.WriteLine($"Your deposite process done successfully.\n" +
+                                  $"Your new balance is: {Deposite}");
+                HoldScreen();//just to hold the screen ...
             }
         }
         //5.3. Withdraw money ...
@@ -249,8 +240,8 @@ namespace MiniProjectBankSystem
             }
             else
             {
-                //to do the process of deposite money ...
-                double DepositeMoney = DoubleValidation("money amount to deposite");
+                //to do the process of withdraw money ...
+                double WithdrawMoney = DoubleValidation("money amount to deposite");
                 //get account money amount using check balance ... do it after login ...
                 //to get money amount in the account ... it will be in the balance leater ...
                 double AccountMoney = 0;
@@ -264,22 +255,22 @@ namespace MiniProjectBankSystem
                         break;//to stop the loop and save the time ...
                     }
                 }
-                double Deposite = AccountMoney - DepositeMoney;
-                bool IsValid = CheckBalanceEqualsMinimumBalance(Deposite);
+                double Withdraw = AccountMoney - WithdrawMoney;
+                bool IsValid = CheckBalanceEqualsMinimumBalance(Withdraw);
                 if (!IsValid)
                 {
-                    Console.WriteLine("Sorry your deposite process is not complete");
+                    Console.WriteLine("Sorry your withdraw process is not complete");
                     HoldScreen();//just to hold the screen ...
                 }
                 else
                 {
-                    balances[index] = Deposite;
-                    Console.WriteLine($"Your deposite process done successfully.\n" +
-                                      $"Your new balance is: {Deposite}");
+                    balances[index] = Withdraw;
+                    Console.WriteLine($"Your withdraw process done successfully.\n" +
+                                      $"Your new balance is: {Withdraw}");
                     HoldScreen();//just to hold the screen ...
                 }
             }
-        }
+        }//to take money from your account ...
         //5.4. Check balance ...
         public static void CheckBalance()
         {
