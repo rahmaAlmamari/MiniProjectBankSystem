@@ -187,10 +187,25 @@ namespace MiniProjectBankSystem
 
         }
         //5.2. Deposite money ...
-        public static void DepositeMoney()
+        public static void DepositeMoney()//to put money to your account ...
         {
-            Console.WriteLine("DepositeMoney");
-            Console.ReadLine();
+            //to enter the account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry the account number you entered is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                //to do the process of deposite money ...
+                double MoneyAmount = DoubleValidation("money amount to deposite");
+
+            }
         }
         //5.3. Withdraw money ...
         public static void WithdrawMoney()
@@ -407,6 +422,63 @@ namespace MiniProjectBankSystem
             //to return tne char input ...
             return DoubleInput;
         }
+        //7.5. IntValidation method ...
+        public static int IntValidation(string message)
+        {
+            bool IntFlag;//to handle user StringNaming error input ...
+            int IntInput = 0;
+            do
+            {
+                IntFlag = false;
+                try
+                {
+                    Console.WriteLine($"Enter your {message}:");
+                    IntInput = int.Parse(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{message} not accepted due to " + e.Message);
+                    Console.WriteLine("please prass enter key to try again");
+                    Console.ReadLine();
+                    IntFlag = true;
+                }
+
+            } while (IntFlag);
+            //to return tne char input ...
+            return IntInput;
+        }
+        //7.6. Check if balance == MinimumBalance ...
+        public static bool CheckBalanceEqualsMinimumBalance(double value)
+        {
+            bool IsValide;
+            if (value < MinimumBalance)
+            {
+                IsValide = false;
+                Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}" +
+                    $"\n please prass enter key to try again");
+                HoldScreen();//to hold the screen ...
+
+            }
+            else
+            {
+                IsValide = true;
+            }
+            return IsValide;
+        }
+        //7.7. Check if the account number exist or not ...
+        public static bool CheckAccountNumberExist(int accountNum)
+        {
+            bool result = false;
+            for(int i = 0; i < accountNumbers.Count; i++)
+            {
+                if (accountNumbers[i] == accountNum)
+                {
+                    result = true;
+                    break;//to step the loop and save the time ...
+                }
+            }
+            return result;
+        }
 
         //============================ 8. Addtional methods ======================
         //8.1. WelcomeMessage method ...
@@ -421,25 +493,7 @@ namespace MiniProjectBankSystem
         {
             return Regex.IsMatch(input, "^[a-zA-Z]+$");
         }
-        //8.3. Check if balance == MinimumBalance ...
-        public static bool CheckBalanceEqualsMinimumBalance(double value)
-        {
-            bool IsValide;
-            if(value < MinimumBalance)
-            {
-                IsValide = false;
-                Console.WriteLine($"Your {value} amount is lass then minimum balance: {MinimumBalance}" +
-                    $"\n please prass enter key to try again");
-                HoldScreen();//to hold the screen ...
-
-            }
-            else
-            {
-                IsValide = true;
-            }
-            return IsValide;
-        }
-        //8.4. ConfirmAction method ...
+        //8.3. ConfirmAction method ...
         public static bool ConfirmAction(string action)
         {
             //confirm process ...
@@ -472,7 +526,7 @@ namespace MiniProjectBankSystem
 
             return actionStatus;
         }
-        //8.5. To hoad the screen ...
+        //8.4. To hoad the screen ...
         public static void HoldScreen()
         {
             Console.WriteLine("Press (Enter Kay) to continue");
