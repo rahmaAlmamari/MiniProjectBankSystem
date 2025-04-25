@@ -67,6 +67,8 @@ namespace MiniProjectBankSystem
                         SaveAccountsInformationToFile();
                         //to save reviews details to the file ...
                         SaveReviews();
+                        //to save requests account opening to the file ...
+                        SaveRequestAccountOpening();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -629,7 +631,7 @@ namespace MiniProjectBankSystem
             Console.ReadLine();
         }
         //8.5. SaveAccountsInformationToFile method ..
-        static void SaveAccountsInformationToFile()
+        public static void SaveAccountsInformationToFile()
         {
             try
             {
@@ -653,12 +655,12 @@ namespace MiniProjectBankSystem
             }
             catch
             {
-                Console.WriteLine("Error saving file.");
+                Console.WriteLine("Error saving accounts data into the file.");
                 HoldScreen();//just to hold second ...
             }
         }
         //8.6. SaveReviews method ...
-        static void SaveReviews()
+        public static void SaveReviews()
         {
             try
             {
@@ -682,8 +684,31 @@ namespace MiniProjectBankSystem
             }
         }
         //8.7.
+        public static void SaveRequestAccountOpening()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(RequestsFilePath))
+                {
+                    foreach (var request in createAccountRequests)
+                    {
+                        writer.WriteLine(request);
+                    }
+                }
+                Console.WriteLine("Request account saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving request account.");
+                HoldScreen();//just to hold second ...
+            }
+        }
         //8.8. LoadAccountsInformationFromFile method ...
-        static void LoadAccountsInformationFromFile()
+        public static void LoadAccountsInformationFromFile()
         {
             try
             {
@@ -727,7 +752,7 @@ namespace MiniProjectBankSystem
             }
         }
         //8.9. LoadReviews method ...
-        static void LoadReviews()
+        public static void LoadReviews()
         {
             try
             {
