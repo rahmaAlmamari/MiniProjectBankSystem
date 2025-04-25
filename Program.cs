@@ -41,6 +41,9 @@ namespace MiniProjectBankSystem
             LoadAccountsInformationFromFile();
             //to load the review details from the file and store it into the stack ...
             LoadReviews();
+            //to load the request account opening
+            //details from the file and store it into the queue ...
+            LoadSaveRequestAccountOpening();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -683,7 +686,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.7.
+        //8.7. SaveRequestAccountOpening method ...
         public static void SaveRequestAccountOpening()
         {
             try
@@ -757,22 +760,69 @@ namespace MiniProjectBankSystem
             try
             {
                 if (!File.Exists(ReviewsFilePath)) return;
-
+                //to store file data temperey and then
+                //store data in the right order in the createAccountRequests
+                Stack<string> TempStoreReview = new Stack<string>();
                 using (StreamReader reader = new StreamReader(ReviewsFilePath))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        reviewsStack.Push(line);
+                        TempStoreReview.Push(line);
                     }
                 }
+                //to clear reviewsStack ...
+                reviewsStack.Clear();
+                //loop to store request from TempStore to createAccountRequests
+                //in the right order
+                foreach (string review in TempStoreReview)
+                {
+                    reviewsStack.Push(review);
+                }
+                Console.WriteLine("Review loaded successfully.");
+                HoldScreen();//just to hold a second ...
             }
             catch
             {
                 Console.WriteLine("Error loading reviews.");
+                HoldScreen();//just to hold a second ...
             }
         }
         //8.10.
+        public static void LoadSaveRequestAccountOpening()
+        {
+            try
+            {
+                if (!File.Exists(RequestsFilePath)) return;
+                //to store file data temperey and then
+                //store data in the right order in the createAccountRequests
+                //Queue<string> TempStoreRequests = new Queue<string>();
+                using (StreamReader reader = new StreamReader(RequestsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        //TempStoreRequests.Enqueue(line);
+                        createAccountRequests.Enqueue(line);
+                    }
+                }
+                //to clear createAccountRequests ...
+                //createAccountRequests.Clear();
+                //loop to store request from TempStore to createAccountRequests
+                //in the right order
+                //foreach (string request in TempStoreRequests)
+                //{
+                //    createAccountRequests.Enqueue(request);
+                //}
+                Console.WriteLine("Requests accounts oprning loaded successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error loading reviews.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
 
 
     }
