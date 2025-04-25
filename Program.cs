@@ -39,6 +39,8 @@ namespace MiniProjectBankSystem
             WelcomeMessage();
             //to load the accounts information from the file and store it into the lists ...
             LoadAccountsInformationFromFile();
+            //to load the review details from the file and store it into the stack ...
+            LoadReviews();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -61,8 +63,12 @@ namespace MiniProjectBankSystem
                         break;
 
                     case '0'://to exsit Main ...
+                        //to save end user data to the file ...
+                        SaveAccountsInformationToFile();
+                        //to save reviews details to the file ...
+                        SaveReviews();
                         Console.WriteLine("Have a nice day (^0^)");
-                        MainRun = false;
+                        MainRun = false;//to stop the while loop ...
                         break;
 
                     default:
@@ -622,7 +628,61 @@ namespace MiniProjectBankSystem
             Console.WriteLine("Press (Enter Kay) to continue");
             Console.ReadLine();
         }
-        //8.5. LoadAccountsInformationFromFile method ...
+        //8.5. SaveAccountsInformationToFile method ..
+        static void SaveAccountsInformationToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(AccountsFilePath))
+                {
+                    for (int i = 0; i < accountNumbers.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{accountNumbers[i]},{accountUserNames[i]}," +
+                                          $"{nationalID[i]},{balances[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine("Accounts saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.6. SaveReviews method ...
+        static void SaveReviews()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(ReviewsFilePath))
+                {
+                    foreach (var review in reviewsStack)
+                    {
+                        writer.WriteLine(review);
+                    }
+                }
+                Console.WriteLine("Reviews saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving reviews.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.7.
+        //8.8. LoadAccountsInformationFromFile method ...
         static void LoadAccountsInformationFromFile()
         {
             try
@@ -666,7 +726,28 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
+        //8.9. LoadReviews method ...
+        static void LoadReviews()
+        {
+            try
+            {
+                if (!File.Exists(ReviewsFilePath)) return;
 
+                using (StreamReader reader = new StreamReader(ReviewsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        reviewsStack.Push(line);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error loading reviews.");
+            }
+        }
+        //8.10.
 
 
     }
