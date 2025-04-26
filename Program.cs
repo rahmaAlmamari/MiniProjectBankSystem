@@ -168,6 +168,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("2. Approve reguests accounts opening");
                 Console.WriteLine("3. View opinging accounts in the system");
                 Console.WriteLine("4. View all review in the system");
+                Console.WriteLine("5. Add new admin");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
@@ -188,6 +189,10 @@ namespace MiniProjectBankSystem
 
                     case '4'://to call ViewAllReview method ...
                         ViewAllReview();
+                        break;
+
+                    case '5'://to call AddNewAdmin method ...
+                        AddNewAdmin();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -443,6 +448,28 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("----------------------");
             }
             HoldScreen();//to hold the screen ...
+        }
+        //6.5. Add new admin ...
+        public static void AddNewAdmin()
+        {
+            //to get NationalID from the admin ...
+            string AdminNationalID;
+            bool IsExist;
+            do
+            {
+                IsExist = false;
+                //to get and validate AdminNationalID input ...
+                AdminNationalID = StringValidation("national ID");
+                bool UserNationalIDIsExsit = NationalIDIsUnique(AdminNationalID, LoginAdminNationalID);
+                if (!UserNationalIDIsExsit)
+                {
+                    IsExist = true;
+                }
+            } while (IsExist);
+            //to store the new UserNationalID to LoginUserNationalID list ...
+            LoginAdminNationalID.Add(AdminNationalID);
+            Console.WriteLine("Adding new admin process done successfully");
+            HoldScreen();//just to hold a second ...
         }
 
         //============================ 7. Validation =============================
