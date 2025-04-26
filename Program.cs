@@ -54,13 +54,13 @@ namespace MiniProjectBankSystem
             //to load the request account opening
             //details from the file and store it into the queue ...
             LoadSaveRequestAccountOpening();
+            //to load the login info for end users to LoginUserNationalID list ...
+            LoadLoginUserNationalIDFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
             {
                 Console.Clear();//to clear the screen ...
-                //Console.WriteLine("1. User menu");
-                //Console.WriteLine("2. Admain menu");
                 Console.WriteLine("1. Sing in");
                 Console.WriteLine("2. Log in");
                 Console.WriteLine("0. Log out");
@@ -86,6 +86,8 @@ namespace MiniProjectBankSystem
                         SaveReviews();
                         //to save requests account opening to the file ...
                         SaveRequestAccountOpening();
+                        //to save login info for end user to the file ...
+                        SaveLoginUserNationalIDToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -789,7 +791,31 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.10. LoadAccountsInformationFromFile method ...
+        //8.10. 
+        public static void SaveLoginUserNationalIDToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(EndUsersFilePath))
+                {
+                    for (int i = 0; i < LoginUserNationalID.Count; i++)
+                    {
+                        writer.WriteLine(LoginUserNationalID[i]);
+                    }
+                }
+                Console.WriteLine("Login info for end users saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving Login info for end users into the file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.11. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -833,7 +859,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.11. LoadReviews method ...
+        //8.12. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -867,7 +893,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.12. LoadSaveRequestAccountOpening method ...
+        //8.13. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -900,6 +926,38 @@ namespace MiniProjectBankSystem
             {
                 Console.WriteLine("Error loading reviews.");
                 HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.14. 
+        public static void LoadLoginUserNationalIDFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(EndUsersFilePath))
+                {
+                    Console.WriteLine("Sorry ... no saved data found in users.txt file.");
+                    HoldScreen();//to hold a second ...
+                    return;//to stop the method ...
+                }
+                //to make sure that LoginUserNationalID list is clear ...
+                LoginUserNationalID.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(EndUsersFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        LoginUserNationalID.Add(line);
+                    }
+                }
+                Console.WriteLine("Login info for end users loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading file.");
+                HoldScreen();
             }
         }
 
