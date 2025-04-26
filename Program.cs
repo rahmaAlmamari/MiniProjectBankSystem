@@ -31,6 +31,16 @@ namespace MiniProjectBankSystem
         //1.8. RequestsFilePath to store requests.txt path
         //where we will store request details 
         const string RequestsFilePath = "requests.txt";
+        //1.9. EndUsersFilePath to store users.txt path
+        //where we will store users info 
+        const string EndUsersFilePath = "users.txt";
+        //1.8. AdminsFilePath to store admin.txt path
+        //where we will store admin info 
+        const string AdminsFilePath = "admin.txt";
+        //1.10. LoginUserNationalID list to store users info
+        static List<string> LoginUserNationalID = new List<string>();
+        //1.11. LoginAdminNationalID list to store users info
+        static List<string> LoginAdminNationalID = new List<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -49,23 +59,27 @@ namespace MiniProjectBankSystem
             while (MainRun)
             {
                 Console.Clear();//to clear the screen ...
-                Console.WriteLine("1. User menu");
-                Console.WriteLine("2. Admain menu");
-                Console.WriteLine("0. Exsit");
+                //Console.WriteLine("1. User menu");
+                //Console.WriteLine("2. Admain menu");
+                Console.WriteLine("1. Sing in");
+                Console.WriteLine("2. Log in");
+                Console.WriteLine("0. Log out");
                 //to call CharValidation to get and validate user input ...
                 char MainOption = CharValidation("option");
                 //to run the option user want ...
                 switch (MainOption)
                 {
-                    case '1'://to call User menu method ...
-                        EndUserMenu();
+                    case '1'://to call SingIn method ...
+                        //EndUserMenu();
+                        SingIn();
                         break;
 
-                    case '2'://to call Admain menu method ...
-                        AdmainMenu();
+                    case '2'://to call LogIn method ...
+                        //AdmainMenu();
+                        LogIn();
                         break;
 
-                    case '0'://to exsit Main ...
+                    case '0'://to log out Main ...
                         //to save end user data to the file ...
                         SaveAccountsInformationToFile();
                         //to save reviews details to the file ...
@@ -87,7 +101,7 @@ namespace MiniProjectBankSystem
         }
 
         //============================== 3. EndUser menu =======================
-        public static void EndUserMenu()
+        public static void EndUserMenu(string nationalId)
         {
             //to keep the EndUserMenu method runs until user choose to closed it ...
             bool EndUserMenuRun = true;//to stop the EndUserMenu method ...
@@ -139,7 +153,7 @@ namespace MiniProjectBankSystem
         }
 
         //============================== 4. Admain menu ========================
-        public static void AdmainMenu()
+        public static void AdmainMenu(string nationalId)
         {
             //to keep the AdmainMenu method runs until user choose to closed it ...
             bool AdmainMenuRun = true;//to stop the AdmainMenu method ...
@@ -490,8 +504,8 @@ namespace MiniProjectBankSystem
                 // Check if StringInput null or empty
                 if (string.IsNullOrWhiteSpace(StringInput))
                 {
-                    Console.WriteLine($"{message} cannot be empty. Please prass enter key to try again");
-                    Console.ReadLine();//just to hoad second ...
+                    Console.WriteLine($"{message} cannot be empty.");
+                    HoldScreen();//just to hoad second ...
                     StringFlag = true;
                 }
 
@@ -580,21 +594,86 @@ namespace MiniProjectBankSystem
             }
             return result;
         }
+        //7.8. Check if the NationalID unique or not ...
+        public static bool NationalIDIsUnique(string id, List<string> list)
+        {
+            bool IsUnique = true;//it is unique (not exsit in the system) ...
+            //to check if NationalID is exist or not (NationalID should be unique) ...
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (id == list[i])
+                {
+                    Console.WriteLine("National ID is exist in the system.");
+                    HoldScreen();//just to hoad second ...
+                    IsUnique = false;
+                    break; //to stop the loop ...
+                }
+            }
 
+            //to return if exist or not ... 
+            return IsUnique;
+        }
         //============================ 8. Addtional methods ======================
-        //8.1. WelcomeMessage method ...
+        //8.1. Sing in method (just to sing in the end users) ...
+        public static void SingIn()
+        {
+            //to get NationalID from the user ...
+            string UserNationalID;
+            bool IsExist;
+            do
+            {
+                IsExist = false;
+                //to get and validate UserNationalID input ...
+                UserNationalID = StringValidation("national ID");
+                bool UserNationalIDIsExsit = NationalIDIsUnique(UserNationalID, LoginUserNationalID);
+                if (!UserNationalIDIsExsit)
+                {
+                    IsExist = true;
+                }
+            } while (IsExist);
+            //to store the new UserNationalID to LoginUserNationalID list ...
+            LoginUserNationalID.Add(UserNationalID);
+            Console.WriteLine("Your sing in process done successfully");
+            HoldScreen();//just to hold a second ...
+
+        }
+        //8.2. Log in method ...
+        public static void LogIn()
+        {
+            //to get NationalID from the user ...
+            string UserNationalID;
+            //to get and validate UserNationalID input ...
+            UserNationalID = StringValidation("national ID");
+            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID))
+            {
+                //to call EndUserMenu method ...
+                EndUserMenu(UserNationalID);
+            }
+            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID))
+            {
+                //to call AdmainMenu method ...
+                AdmainMenu(UserNationalID);
+            }
+            else
+            {
+                Console.WriteLine("Sorry ... this national id is " +
+                                  "not a sing in the system.");
+                HoldScreen();
+            }
+        }
+        //8.3. WelcomeMessage method ...
         public static void WelcomeMessage()
         {
             Console.WriteLine("Welcome to Codeline Bank System\nWe hope you have a pleasant time using our services " +
-                              "(^0^)\nPress enter key to go to the menu screen");
+                              "(^0^)");
             HoldScreen();//to hold the screen ...
         }
-        //8.2. To check of the string contains something other than letters like number and empty space(this methos return true or false)....
+        //8.4. To check of the string contains something other than letters like number and empty space(this methos return true or false)....
         static bool IsAlpha(string input)
         {
             return Regex.IsMatch(input, "^[a-zA-Z]+$");
         }
-        //8.3. ConfirmAction method ...
+        //8.5. ConfirmAction method ...
         public static bool ConfirmAction(string action)
         {
             //confirm process ...
@@ -627,13 +706,13 @@ namespace MiniProjectBankSystem
 
             return actionStatus;
         }
-        //8.4. To hoad the screen ...
+        //8.6. To hoad the screen ...
         public static void HoldScreen()
         {
             Console.WriteLine("Press (Enter Kay) to continue");
             Console.ReadLine();
         }
-        //8.5. SaveAccountsInformationToFile method ..
+        //8.7. SaveAccountsInformationToFile method ..
         public static void SaveAccountsInformationToFile()
         {
             try
@@ -662,7 +741,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.6. SaveReviews method ...
+        //8.8. SaveReviews method ...
         public static void SaveReviews()
         {
             try
@@ -686,7 +765,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.7. SaveRequestAccountOpening method ...
+        //8.9. SaveRequestAccountOpening method ...
         public static void SaveRequestAccountOpening()
         {
             try
@@ -710,7 +789,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.8. LoadAccountsInformationFromFile method ...
+        //8.10. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -754,7 +833,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.9. LoadReviews method ...
+        //8.11. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -788,7 +867,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.10.
+        //8.12. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -814,7 +893,7 @@ namespace MiniProjectBankSystem
                 //{
                 //    createAccountRequests.Enqueue(request);
                 //}
-                Console.WriteLine("Requests accounts oprning loaded successfully.");
+                Console.WriteLine("Requests accounts opening loaded successfully.");
                 HoldScreen();//just to hold a second ...
             }
             catch
