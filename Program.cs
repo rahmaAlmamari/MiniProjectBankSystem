@@ -56,6 +56,8 @@ namespace MiniProjectBankSystem
             LoadSaveRequestAccountOpening();
             //to load the login info for end users to LoginUserNationalID list ...
             LoadLoginUserNationalIDFromFile();
+            //to load the login info for admin to LoginAdminNationalID list ...
+            LoadLoginAdminNationalIDFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -70,12 +72,10 @@ namespace MiniProjectBankSystem
                 switch (MainOption)
                 {
                     case '1'://to call SingIn method ...
-                        //EndUserMenu();
                         SingIn();
                         break;
 
                     case '2'://to call LogIn method ...
-                        //AdmainMenu();
                         LogIn();
                         break;
 
@@ -88,6 +88,8 @@ namespace MiniProjectBankSystem
                         SaveRequestAccountOpening();
                         //to save login info for end user to the file ...
                         SaveLoginUserNationalIDToFile();
+                        //to save login info for admin to the file ...
+                        SaveLoginAdminNationalIDToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -791,7 +793,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.10. 
+        //8.10. SaveLoginUserNationalIDToFile method ...
         public static void SaveLoginUserNationalIDToFile()
         {
             try
@@ -815,7 +817,31 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.11. LoadAccountsInformationFromFile method ...
+        //8.11. SaveLoginAdminNationalIDToFile method ...
+        public static void SaveLoginAdminNationalIDToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(AdminsFilePath))
+                {
+                    for (int i = 0; i < LoginAdminNationalID.Count; i++)
+                    {
+                        writer.WriteLine(LoginAdminNationalID[i]);
+                    }
+                }
+                Console.WriteLine("Login info for admin saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving Login info for admin into the file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.12. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -859,7 +885,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.12. LoadReviews method ...
+        //8.13. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -893,7 +919,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.13. LoadSaveRequestAccountOpening method ...
+        //8.14. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -928,7 +954,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.14. 
+        //8.15. LoadLoginUserNationalIDFromFile method ...
         public static void LoadLoginUserNationalIDFromFile()
         {
             try
@@ -952,6 +978,38 @@ namespace MiniProjectBankSystem
                     }
                 }
                 Console.WriteLine("Login info for end users loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading file.");
+                HoldScreen();
+            }
+        }
+        //8.16. LoadLoginAdminNationalIDFromFile method ...
+        public static void LoadLoginAdminNationalIDFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(AdminsFilePath))
+                {
+                    Console.WriteLine("Sorry ... no saved data found in admin.txt file.");
+                    HoldScreen();//to hold a second ...
+                    return;//to stop the method ...
+                }
+                //to make sure that LoginUserNationalID list is clear ...
+                LoginAdminNationalID.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(AdminsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        LoginAdminNationalID.Add(line);
+                    }
+                }
+                Console.WriteLine("Login info for admin loaded successfully.");
                 HoldScreen();
             }
             catch
