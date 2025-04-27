@@ -1135,12 +1135,52 @@ namespace MiniProjectBankSystem
         //8.17. SearchAccountByNationalID method ...
         public static void SearchAccountByNationalID()
         {
-
+            bool FoundFlag = true;
+            //to get national id from the admin ...
+            string nationalIDSearch = StringValidation("national ID");
+            //to loop on all nationalID list ...
+            for (int i = 0; i < nationalID.Count; i++)
+            {
+                if(nationalIDSearch == nationalID[i])
+                {
+                    Console.WriteLine("Account information:");
+                    Console.WriteLine($"Account number: {accountNumbers[i]}");
+                    Console.WriteLine($"Account balance: {balances[i]}");
+                    HoldScreen();//just to hold second ...
+                    FoundFlag = false;
+                    break;
+                }
+            }
+            if(FoundFlag)
+            {
+                Console.WriteLine("There is no account with this national ID");
+                HoldScreen();//just to hold second ...
+            }
         }
         //8.18. SearchAccountByName method ...
         public static void SearchAccountByName()
         {
-
+            bool FoundFlag = true;
+            //to get name from the admin ...
+            string NameSearch = StringNamingValidation("name");
+            //to loop on all accountUserNames list ...
+            for (int i = 0; i < accountUserNames.Count; i++)
+            {
+                if (NameSearch.ToLower() == accountUserNames[i].ToLower())
+                {
+                    Console.WriteLine("Account information:");
+                    Console.WriteLine($"Account number: {accountNumbers[i]}");
+                    Console.WriteLine($"Account balance: {balances[i]}");
+                    HoldScreen();//just to hold second ...
+                    FoundFlag = false;
+                    break;
+                }
+            }
+            if (FoundFlag)
+            {
+                Console.WriteLine("There is no account with this name");
+                HoldScreen();//just to hold second ...
+            }
         }
 
 
