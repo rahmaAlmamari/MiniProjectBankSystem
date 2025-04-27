@@ -170,6 +170,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("4. View all review in the system");
                 Console.WriteLine("5. Add new admin");
                 Console.WriteLine("6. Delete Account");
+                Console.WriteLine("7. Search for account");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
@@ -198,6 +199,10 @@ namespace MiniProjectBankSystem
 
                     case '6'://to call DeleteAccount method ...
                         DeleteAccount();
+                        break;
+
+                    case '7'://to call SearchAccount method ...
+                        SearchAccount();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -513,6 +518,30 @@ namespace MiniProjectBankSystem
             balances.Remove(balances[index]);
             Console.WriteLine($"Account number {AcountNumber} deleted successfully");
             HoldScreen();
+        }
+        //6.7. Search for account ...
+        public static void SearchAccount()
+        {
+            //to get the user selected option for search method ...
+            char SerachOption;
+            Console.WriteLine("1. Search by national ID");
+            Console.WriteLine("2. Search by name");
+            SerachOption = CharValidation("option");
+            switch (SerachOption)
+            {
+                case '1':
+                    SearchAccountByNationalID();
+                    break;
+
+                case '2':
+                    SearchAccountByName();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice.");
+                    HoldScreen();//to hold the screen ...
+                    break;
+            }
         }
 
         //============================ 7. Validation =============================
@@ -1102,6 +1131,16 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Error loading file.");
                 HoldScreen();
             }
+        }
+        //8.17. SearchAccountByNationalID method ...
+        public static void SearchAccountByNationalID()
+        {
+
+        }
+        //8.18. SearchAccountByName method ...
+        public static void SearchAccountByName()
+        {
+
         }
 
 
