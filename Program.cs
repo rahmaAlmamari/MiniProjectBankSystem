@@ -169,6 +169,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("3. View opinging accounts in the system");
                 Console.WriteLine("4. View all review in the system");
                 Console.WriteLine("5. Add new admin");
+                Console.WriteLine("6. Delete Account");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
@@ -193,6 +194,10 @@ namespace MiniProjectBankSystem
 
                     case '5'://to call AddNewAdmin method ...
                         AddNewAdmin();
+                        break;
+
+                    case '6'://to call DeleteAccount method ...
+                        DeleteAccount();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -479,6 +484,35 @@ namespace MiniProjectBankSystem
             Console.WriteLine("Adding new admin process done successfully");
             HoldScreen();//just to hold a second ...
         }
+        //6.6. Delete account ...
+        public static void DeleteAccount()
+        {
+            //to call ViewOpingingAccounts ...
+            ViewOpingingAccounts();
+            //delete account process start here ...
+            bool DeleteFlag;
+            int AcountNumber;
+            do
+            {
+                DeleteFlag = false;
+                AcountNumber = IntValidation("account number you want to delete");
+                bool AccountNoExist = CheckAccountNumberExist(AcountNumber);
+                if (!AccountNoExist)
+                {
+                    Console.WriteLine("Sorry ... Account number you entered is not exist");
+                    HoldScreen();//just to hold a second ...
+                    DeleteFlag = true;
+                }
+            } while (DeleteFlag);
+            //to get AcountNumber index ...
+            int index = accountNumbers.IndexOf(AcountNumber);
+            accountNumbers.Remove(AcountNumber);
+            accountUserNames.Remove(accountUserNames[index]);
+            nationalID.Remove(nationalID[index]);
+            balances.Remove(balances[index]);
+            Console.WriteLine($"Account number {AcountNumber} deleted successfully");
+            HoldScreen();
+        }
 
         //============================ 7. Validation =============================
         //7.1. CharValidation method ...
@@ -587,14 +621,13 @@ namespace MiniProjectBankSystem
                 IntFlag = false;
                 try
                 {
-                    Console.WriteLine($"Enter your {message}:");
+                    Console.WriteLine($"Enter {message}:");
                     IntInput = int.Parse(Console.ReadLine());
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"{message} not accepted due to " + e.Message);
-                    Console.WriteLine("please prass enter key to try again");
-                    Console.ReadLine();
+                    HoldScreen();//just to hold a second ...
                     IntFlag = true;
                 }
 
