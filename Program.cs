@@ -124,7 +124,7 @@ namespace MiniProjectBankSystem
                 switch (EndUserMenuOption)
                 {
                     case '1'://to call ReguestAccountOpening method ...
-                        ReguestAccountOpening();
+                        ReguestAccountOpening(nationalId);
                         break;
 
                     case '2'://to call DepositeMoney method ...
@@ -210,11 +210,19 @@ namespace MiniProjectBankSystem
 
         //============================== 5. EndUser use case ===================
         //5.1. Reguest account opening ...
-        public static void ReguestAccountOpening()
+        public static void ReguestAccountOpening(string nationalID_user)
         {
             //to get the input from the user ...
             string UserName = StringNamingValidation("name");//to get and validate UserName input ...
-            string UserNationalID = StringValidation("national ID");//to get and validate UserNationalID input ...
+            //string UserNationalID = StringValidation("national ID");//to get and validate UserNationalID input ...
+            string UserNationalID = nationalID_user;
+            bool NationalIDIsExist = CheckDuplicateAccountRequests(UserNationalID);
+            if (NationalIDIsExist)
+            {
+                Console.WriteLine("Sorry ... there is request submited with this national id!");
+                HoldScreen();//just to hold a second ...
+                return;//to stop the method ...
+            }
             bool BalanceIsValide;
             double InitialBalance;
             do
@@ -643,6 +651,21 @@ namespace MiniProjectBankSystem
 
             //to return if exist or not ... 
             return IsUnique;
+        }
+        //7.9. Check  Duplicate Account Requests ...
+        public static bool CheckDuplicateAccountRequests(string id)
+        {
+            bool result = false;
+            foreach(string request in createAccountRequests)
+            {
+                string[] RequestDteials = request.Split('|').ToArray();
+                if(id == RequestDteials[1])
+                {
+                    result = true;
+                    break;
+                }  
+            }
+            return result;
         }
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
