@@ -63,7 +63,7 @@ namespace MiniProjectBankSystem
             while (MainRun)
             {
                 Console.Clear();//to clear the screen ...
-                Console.WriteLine("1. Sing in");
+                Console.WriteLine("1. Sing up");
                 Console.WriteLine("2. Log in");
                 Console.WriteLine("0. Log out");
                 //to call CharValidation to get and validate user input ...
@@ -72,7 +72,7 @@ namespace MiniProjectBankSystem
                 switch (MainOption)
                 {
                     case '1'://to call SingIn method ...
-                        SingIn();
+                        SingUp();
                         break;
 
                     case '2'://to call LogIn method ...
@@ -473,8 +473,9 @@ namespace MiniProjectBankSystem
                 IsExist = false;
                 //to get and validate AdminNationalID input ...
                 AdminNationalID = StringValidation("national ID");
-                bool UserNationalIDIsExsit = NationalIDIsUnique(AdminNationalID, LoginAdminNationalID);
-                if (!UserNationalIDIsExsit)
+                bool UserNationalIDIsExsit = NationalIDIsUnique(AdminNationalID, LoginUserNationalID);
+                bool AdminNationalIDIsExsit = NationalIDIsUnique(AdminNationalID, LoginAdminNationalID);
+                if (!UserNationalIDIsExsit || !AdminNationalIDIsExsit)
                 {
                     IsExist = true;
                 }
@@ -702,7 +703,7 @@ namespace MiniProjectBankSystem
         }
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
-        public static void SingIn()
+        public static void SingUp()
         {
             //to get NationalID from the user ...
             string UserNationalID;
@@ -713,7 +714,8 @@ namespace MiniProjectBankSystem
                 //to get and validate UserNationalID input ...
                 UserNationalID = StringValidation("national ID");
                 bool UserNationalIDIsExsit = NationalIDIsUnique(UserNationalID, LoginUserNationalID);
-                if (!UserNationalIDIsExsit)
+                bool AdminNationalIDIsExsit = NationalIDIsUnique(UserNationalID, LoginAdminNationalID);
+                if (!UserNationalIDIsExsit || !AdminNationalIDIsExsit)
                 {
                     IsExist = true;
                 }
