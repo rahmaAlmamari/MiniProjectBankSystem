@@ -171,6 +171,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("5. Add new admin");
                 Console.WriteLine("6. Delete Account");
                 Console.WriteLine("7. Search for account");
+                Console.WriteLine("8. Show total bank balance");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
@@ -203,6 +204,10 @@ namespace MiniProjectBankSystem
 
                     case '7'://to call SearchAccount method ...
                         SearchAccount();
+                        break;
+
+                    case '8'://to call ShowTotalBankBalance method ...
+                        ShowTotalBankBalance();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -552,6 +557,27 @@ namespace MiniProjectBankSystem
                     HoldScreen();//to hold the screen ...
                     break;
             }
+        }
+        //6.8. Show total bank balance ...
+        public static void ShowTotalBankBalance()
+        {
+            //to check if there is a balance store or not ...
+            if(balances.Count == 0)
+            {
+                Console.WriteLine("There is no balance stored yet!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the function ...
+            }
+            //variable to store the sum of all balance ... 
+            double TotalBalance = 0;
+            //to loop on all balance ...
+            for(int i = 0; i < balances.Count; i++)
+            {
+                TotalBalance = TotalBalance + balances[i];
+            }
+            //to display the total balance ...
+            Console.WriteLine($"The total balance is: {TotalBalance}");
+            HoldScreen();//just to hold a second ...
         }
 
         //============================ 7. Validation =============================
