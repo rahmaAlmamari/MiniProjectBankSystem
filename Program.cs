@@ -510,14 +510,24 @@ namespace MiniProjectBankSystem
                     DeleteFlag = true;
                 }
             } while (DeleteFlag);
-            //to get AcountNumber index ...
-            int index = accountNumbers.IndexOf(AcountNumber);
-            accountNumbers.Remove(AcountNumber);
-            accountUserNames.Remove(accountUserNames[index]);
-            nationalID.Remove(nationalID[index]);
-            balances.Remove(balances[index]);
-            Console.WriteLine($"Account number {AcountNumber} deleted successfully");
-            HoldScreen();
+            bool ConfirmDelete = ConfirmAction("delete this account");
+            if (ConfirmDelete)
+            {
+                //to get AcountNumber index ...
+                int index = accountNumbers.IndexOf(AcountNumber);
+                accountNumbers.Remove(AcountNumber);
+                accountUserNames.Remove(accountUserNames[index]);
+                nationalID.Remove(nationalID[index]);
+                balances.Remove(balances[index]);
+                Console.WriteLine($"Account number {AcountNumber} deleted successfully");
+                HoldScreen();
+            }
+            else
+            {
+                Console.WriteLine("Delete process stoped");
+                HoldScreen();//just to hold a second ...
+            }
+    
         }
         //6.7. Search for account ...
         public static void SearchAccount()
