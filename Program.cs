@@ -22,24 +22,28 @@ namespace MiniProjectBankSystem
         static List<double> balances = new List<double>();
         //1.5. reviewsStack stack ...
         static Stack<string> reviewsStack = new Stack<string>();
+        static List<string> reviewsNationalID = new List<string>();
         //1.6. AccountsFilePath to store accounts.txt path
         //where we will store account information 
         const string AccountsFilePath = "accounts.txt";
         //1.7. ReviewsFilePath to store reviews.txt path
         //where we will store review details 
         const string ReviewsFilePath = "reviews.txt";
-        //1.8. RequestsFilePath to store requests.txt path
+        //1.8. ReviewsNationalIDFilePath to store reviewsNationalId.txt path
+        //where we will store review national id 
+        const string ReviewsNationalIDFilePath = "reviewsNationalId.txt";
+        //1.9. RequestsFilePath to store requests.txt path
         //where we will store request details 
         const string RequestsFilePath = "requests.txt";
-        //1.9. EndUsersFilePath to store users.txt path
+        //1.10. EndUsersFilePath to store users.txt path
         //where we will store users info 
         const string EndUsersFilePath = "users.txt";
-        //1.8. AdminsFilePath to store admin.txt path
+        //1.11. AdminsFilePath to store admin.txt path
         //where we will store admin info 
         const string AdminsFilePath = "admin.txt";
-        //1.10. LoginUserNationalID list to store users info
+        //1.12. LoginUserNationalID list to store users info
         static List<string> LoginUserNationalID = new List<string>();
-        //1.11. LoginAdminNationalID list to store users info
+        //1.13. LoginAdminNationalID list to store users info
         static List<string> LoginAdminNationalID = new List<string>();
 
         //============================== 2. Main method ========================
@@ -51,6 +55,8 @@ namespace MiniProjectBankSystem
             LoadAccountsInformationFromFile();
             //to load the review details from the file and store it into the stack ...
             LoadReviews();
+            //to load the review national id from the file and store it into the list ...
+            LoadReviewsNationalId();
             //to load the request account opening
             //details from the file and store it into the queue ...
             LoadSaveRequestAccountOpening();
@@ -84,6 +90,8 @@ namespace MiniProjectBankSystem
                         SaveAccountsInformationToFile();
                         //to save reviews details to the file ...
                         SaveReviews();
+                        //to save reviews national id to the file ...
+                        SaveReviewsNationalId();
                         //to save requests account opening to the file ...
                         SaveRequestAccountOpening();
                         //to save login info for end user to the file ...
@@ -118,6 +126,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("4. Check balance");//to know how much in your account ...
                 Console.WriteLine("5. Submit review");//to submit message with what you like and what not to the admin ...
                 Console.WriteLine("6. Transfer money between accounts");
+                Console.WriteLine("7. Undo last complaint submitted");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char EndUserMenuOption = CharValidation("option");
@@ -141,11 +150,15 @@ namespace MiniProjectBankSystem
                         break;
 
                     case '5'://to call SubmitReview method ...
-                        SubmitReview();
+                        SubmitReview(nationalId);
                         break;
 
                     case '6'://to call TransferBetweenAccounts method ...
                         TransferBetweenAccounts();
+                        break;
+
+                    case '7'://to call UndoLastComplaintSubmitted method ...
+                        UndoLastComplaintSubmitted();
                         break;
 
                     case '0'://to exsit EndUserMenu ...
@@ -378,12 +391,14 @@ namespace MiniProjectBankSystem
             }
             }//to know how much in your account ...
         //5.5. Submit review ...
-        public static void SubmitReview()
+        public static void SubmitReview(string id)
         {
             //to get the review input from the user ...
             string review = StringValidation("review");//to validate the review ...
             //to store the review in the reviewsStack ...
             reviewsStack.Push(review);
+            //to store the review national id in the reviewsNationalID ...
+            reviewsNationalID.Add(id);
             Console.WriteLine("Your review submited successfully");
             HoldScreen();//to hold the screen ...
         }//to submit message with what you like and what not to the admin ...
@@ -448,6 +463,21 @@ namespace MiniProjectBankSystem
                     HoldScreen();//just to hold the screen ...
                 }
             }
+        }
+        //5.7. Undo last complaint submitted ...
+        public static void UndoLastComplaintSubmitted()
+        {
+            //to check if there is review submited or not ...
+            if (reviewsStack.Count == 0)
+            {
+                Console.WriteLine("There is no review submited yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method ...
+            }
+            //to remove the last review submited ...
+            reviewsStack.Pop();
+            Console.WriteLine("Your last complaint submitted removed successfully");
+            HoldScreen();//to hold the screen ...
         }
 
         //============================ 6. Admain use case =======================
@@ -1093,7 +1123,31 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.12. LoadAccountsInformationFromFile method ...
+        //8.12. SaveReviewsNationalId method ...
+        public static void SaveReviewsNationalId()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(ReviewsNationalIDFilePath))
+                {
+                    for (int i = 0; i < reviewsNationalID.Count; i++)
+                    {
+                        writer.WriteLine(reviewsNationalID[i]);
+                    }
+                }
+                Console.WriteLine("Reviews national id saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving reviews national id into the file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.13. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -1137,7 +1191,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.13. LoadReviews method ...
+        //8.14. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -1171,7 +1225,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.14. LoadSaveRequestAccountOpening method ...
+        //8.15. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -1206,7 +1260,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.15. LoadLoginUserNationalIDFromFile method ...
+        //8.16. LoadLoginUserNationalIDFromFile method ...
         public static void LoadLoginUserNationalIDFromFile()
         {
             try
@@ -1238,7 +1292,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.16. LoadLoginAdminNationalIDFromFile method ...
+        //8.17. LoadLoginAdminNationalIDFromFile method ...
         public static void LoadLoginAdminNationalIDFromFile()
         {
             try
@@ -1270,7 +1324,32 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.17. SearchAccountByNationalID method ...
+        //8.18. LoadReviewsNationalId method ...
+        public static void LoadReviewsNationalId()
+        {
+            try
+            {
+                if (!File.Exists(ReviewsNationalIDFilePath)) return;
+                //to store file data temperey and then
+                //store data in the right order in the createAccountRequests
+                using (StreamReader reader = new StreamReader(ReviewsNationalIDFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        reviewsNationalID.Add(line);
+                    }
+                }
+                Console.WriteLine("Reviews national id loaded successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error loading reviews.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.19. SearchAccountByNationalID method ...
         public static void SearchAccountByNationalID()
         {
             bool FoundFlag = true;
@@ -1295,7 +1374,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.18. SearchAccountByName method ...
+        //8.20. SearchAccountByName method ...
         public static void SearchAccountByName()
         {
             bool FoundFlag = true;
