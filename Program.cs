@@ -172,6 +172,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("6. Delete Account");
                 Console.WriteLine("7. Search for account");
                 Console.WriteLine("8. Show total bank balance");
+                Console.WriteLine("9. Show Top 3 Richest Customers");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 char AdmainMenuRunOption = CharValidation("option");
@@ -208,6 +209,10 @@ namespace MiniProjectBankSystem
 
                     case '8'://to call ShowTotalBankBalance method ...
                         ShowTotalBankBalance();
+                        break;
+
+                    case '9'://to call ShowTop3RichestCustomers method ...
+                        ShowTop3RichestCustomers();
                         break;
 
                     case '0'://to exsit AdmainMenuRun ...
@@ -577,6 +582,36 @@ namespace MiniProjectBankSystem
             }
             //to display the total balance ...
             Console.WriteLine($"The total balance is: {TotalBalance}");
+            HoldScreen();//just to hold a second ...
+        }
+        //6.9. Show Top 3 Richest Customers ...
+        public static void ShowTop3RichestCustomers()
+        {
+            //to check if there is a balance store or not ...
+            if (balances.Count == 0)
+            {
+                Console.WriteLine("There is no balance stored yet!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the function ...
+            }
+            //to sort the balances in descending order ...
+            List<double> sortedBalances = new List<double>(balances);
+            //to store the value in balances list in sortedBalances list ...
+            for (int i = 0; i < balances.Count; i++)
+            {
+                sortedBalances.Add(balances[i]);
+            }
+            sortedBalances.Sort();
+            sortedBalances.Reverse();
+            //to display the top 3 richest customers ...
+            Console.WriteLine("Top 3 Richest Customers:");
+            for (int i = 0; i < 3; i++)
+            {
+                int index = balances.IndexOf(sortedBalances[i]);
+                Console.WriteLine($"Account Number: {accountNumbers[index]}, " +
+                                  $"User Name: {accountUserNames[index]}, " +
+                                  $"Balance: {sortedBalances[i]}");
+            }
             HoldScreen();//just to hold a second ...
         }
 
