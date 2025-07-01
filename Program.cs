@@ -973,27 +973,48 @@ namespace MiniProjectBankSystem
             }
             return result;
         }
-        //7.10. Check if the Password unique or not ...
-        //public static bool PasswordIsUnique(string password, List<string> list)
-        //{
-        //    bool IsUnique = true;//it is unique (not exsit in the system) ...
-        //    //to check if password is exist or not (password should be unique) ...
-        //    for (int i = 0; i < list.Count; i++)
-        //    {
-        //        if (password == list[i])
-        //        {
-        //            Console.WriteLine("Password is exist in the system.");
-        //            HoldScreen();//just to hoad second ...
-        //            IsUnique = false;
-        //            break; //to stop the loop ...
-        //        }
-        //    }
 
-        //    //to return if exist or not ... 
-        //    return IsUnique;
-        //}
+        //7.10. To read password from the user and validate it ...
+        public static string ReadPassword(string message)
+        {
+            //StringBuilder -> to improve performance when building strings character by character.
+            //password -> to store the password input from the user ...
+            StringBuilder password = new StringBuilder();
+            //ConsoleKeyInfo -> is a structure that stores information
+            //about a key press: the key, character, and modifiers (like Shift or Ctrl).
+            ConsoleKeyInfo key;
+
+            //To show message to the user to enter password ...
+            Console.WriteLine($"Enter your {message} (press Enter when done):");
+            do
+            {
+                //(intercept: true) -> reads a key press without showing it on the screen.
+                key = Console.ReadKey(intercept: true);
+                //To checks if the user pressed the Backspace key and remove it if so 
+                //from the password and delete * from the console.
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password.Remove(password.Length - 1, 1);
+                    Console.Write("\b \b");
+                }
+                //This filters out non-printable characters, like Ctrl or Alt.
+                //If the key is normal characters (letters, digits, etc.)
+                //it will enter the (if) and add the key to the password
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+            }
+            //The loop continues until the user presses Enter.
+            while (key.Key != ConsoleKey.Enter);
+
+            Console.WriteLine();
+            return password.ToString();
+        }
 
 
+        //7.11. Check if the Password unique or not ...
         static bool PasswordIsUnique(string password, List<string> list)
         {
             bool IsUnique = true;//it is unique (not exsit in the system) ...
@@ -1011,7 +1032,7 @@ namespace MiniProjectBankSystem
 
 
 
-        //7.11. Verify password by comparing hashes
+        //7.12. Verify password by comparing hashes
         static bool VerifyPasswordPBKDF2(string password, string savedHash)
         {
             byte[] hashBytes = Convert.FromBase64String(savedHash);
@@ -1029,7 +1050,7 @@ namespace MiniProjectBankSystem
             }
             return true;
         }
-        //7.12. To hashed Password ...
+        //7.13. To hashed Password ...
         public static string HashPasswordPBKDF2(string password)
         {
             using (var rng = new RNGCryptoServiceProvider())
@@ -1074,7 +1095,7 @@ namespace MiniProjectBankSystem
             {
                 IsExist = false;
                 //to get and validate UserPassword input ...
-                UserPassword = StringValidation("Password");
+                UserPassword = ReadPassword("Password");
                 //to hash the password ...
                 UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
                 bool UserPasswordIsExsit = PasswordIsUnique(UserPasswordHashed, LoginUserPassword);
@@ -1102,7 +1123,7 @@ namespace MiniProjectBankSystem
             string UserPassword;
             //to get and validate UserNationalID input ...
             UserNationalID = StringValidation("national ID");
-            UserPassword = StringValidation("Password");
+            UserPassword = ReadPassword("Password");
             //to hash the password ...
             string UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
 
