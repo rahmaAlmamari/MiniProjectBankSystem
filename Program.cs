@@ -1012,7 +1012,7 @@ namespace MiniProjectBankSystem
             else
             {
                 Console.WriteLine("Sorry ... this national id is " +
-                                  "not a sing in the system.");
+                                  "not a exist in the system.");
                 HoldScreen();
             }
         }
