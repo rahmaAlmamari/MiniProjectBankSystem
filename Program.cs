@@ -74,6 +74,8 @@ namespace MiniProjectBankSystem
             LoadLoginUserFromFile();
             //to load the login info for admin to LoginAdminNationalID list ...
             LoadLoginAdminFromFile();
+            //to load the locked accounts to LockedAccounts list ...
+            LoadLockedAccounts();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -108,6 +110,8 @@ namespace MiniProjectBankSystem
                         SaveLoginUserToFile();
                         //to save login info for admin to the file ...
                         SaveLoginAdminToFile();
+                        //to save locked accounts to the file ...
+                        SaveLockedAccounts();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -1411,7 +1415,32 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.13. LoadAccountsInformationFromFile method ...
+        //8.13. SaveLockedAccounts method ...
+        public static void SaveLockedAccounts()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(LockedAccountsFilePath))
+                {
+                    foreach (var account in LockedAccounts)
+                    {
+                        writer.WriteLine(account);
+                    }
+                }
+                Console.WriteLine("Locked accounts saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving locked accounts into the file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+
+        //8.14. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -1455,7 +1484,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.14. LoadReviews method ...
+        //8.15. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -1489,7 +1518,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.15. LoadSaveRequestAccountOpening method ...
+        //8.16. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -1524,7 +1553,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.16. LoadLoginUserFromFile method ...
+        //8.17. LoadLoginUserFromFile method ...
         public static void LoadLoginUserFromFile()
         {
             try
@@ -1561,7 +1590,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.17. LoadLoginAdminNationalIDFromFile method ...
+        //8.18. LoadLoginAdminNationalIDFromFile method ...
         public static void LoadLoginAdminFromFile()
         {
             try
@@ -1598,7 +1627,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.18. LoadReviewsNationalId method ...
+        //8.19. LoadReviewsNationalId method ...
         public static void LoadReviewsNationalId()
         {
             try
@@ -1623,7 +1652,34 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.19. SearchAccountByNationalID method ...
+        //8.20. LoadLockedAccounts method ...
+        public static void LoadLockedAccounts()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(LockedAccountsFilePath)) return;
+                //to make sure that LockedAccounts list is clear ...
+                LockedAccounts.Clear();
+                //to store file data in the LockedAccounts list ...
+                using (StreamReader reader = new StreamReader(LockedAccountsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        LockedAccounts.Add(line);
+                    }
+                }
+                Console.WriteLine("Locked accounts loaded successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error loading locked accounts.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.21. SearchAccountByNationalID method ...
         public static void SearchAccountByNationalID()
         {
             bool FoundFlag = true;
@@ -1648,7 +1704,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.20. SearchAccountByName method ...
+        //8.22. SearchAccountByName method ...
         public static void SearchAccountByName()
         {
             bool FoundFlag = true;
@@ -1673,6 +1729,8 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
+        
+
 
 
     }
