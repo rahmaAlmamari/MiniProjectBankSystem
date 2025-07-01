@@ -41,10 +41,14 @@ namespace MiniProjectBankSystem
         //1.11. AdminsFilePath to store admin.txt path
         //where we will store admin info 
         const string AdminsFilePath = "admin.txt";
-        //1.12. LoginUserNationalID list to store users info
+        //1.12. LoginUserNationalID list to store users NationalID
         static List<string> LoginUserNationalID = new List<string>();
-        //1.13. LoginAdminNationalID list to store users info
+        //1.13. LoginAdminNationalID list to store admin NationalID
         static List<string> LoginAdminNationalID = new List<string>();
+        //1.14. LoginUserPassword list to store user password
+        static List<string> LoginUserPassword = new List<string>();
+        //1.15. LoginAdminPassword list to store admin password
+        static List<string> LoginAdminPassword = new List<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -60,8 +64,8 @@ namespace MiniProjectBankSystem
             //to load the request account opening
             //details from the file and store it into the queue ...
             LoadSaveRequestAccountOpening();
-            //to load the login info for end users to LoginUserNationalID list ...
-            LoadLoginUserNationalIDFromFile();
+            //to load the login info for end users to LoginUserNationalID and LoginUserPassword list...
+            LoadLoginUserFromFile();
             //to load the login info for admin to LoginAdminNationalID list ...
             LoadLoginAdminNationalIDFromFile();
             //to keep the system runs until user choose to closed the system ...
@@ -95,7 +99,7 @@ namespace MiniProjectBankSystem
                         //to save requests account opening to the file ...
                         SaveRequestAccountOpening();
                         //to save login info for end user to the file ...
-                        SaveLoginUserNationalIDToFile();
+                        SaveLoginUserToFile();
                         //to save login info for admin to the file ...
                         SaveLoginAdminNationalIDToFile();
                         Console.WriteLine("Have a nice day (^0^)");
@@ -967,13 +971,33 @@ namespace MiniProjectBankSystem
             }
             return result;
         }
+        //7.10. Check if the Password unique or not ...
+        public static bool PasswordIsUnique(string password, List<string> list)
+        {
+            bool IsUnique = true;//it is unique (not exsit in the system) ...
+            //to check if NationalID is exist or not (NationalID should be unique) ...
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (password == list[i])
+                {
+                    Console.WriteLine("Password is exist in the system.");
+                    HoldScreen();//just to hoad second ...
+                    IsUnique = false;
+                    break; //to stop the loop ...
+                }
+            }
+
+            //to return if exist or not ... 
+            return IsUnique;
+        }
+
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
         public static void SingUp()
         {
+            bool IsExist;
             //to get NationalID from the user ...
             string UserNationalID;
-            bool IsExist;
             do
             {
                 IsExist = false;
@@ -986,8 +1010,24 @@ namespace MiniProjectBankSystem
                     IsExist = true;
                 }
             } while (IsExist);
+            //to get Password from the user ...
+            string UserPassword;
+            do
+            {
+                IsExist = false;
+                //to get and validate UserPassword input ...
+                UserPassword = StringValidation("Password");
+                bool UserPasswordIsExsit = PasswordIsUnique(UserPassword, LoginUserPassword);
+                bool AdminPasswordIsExsit = PasswordIsUnique(UserPassword, LoginAdminPassword);
+                if (!UserPasswordIsExsit || !UserPasswordIsExsit)
+                {
+                    IsExist = true;
+                }
+            } while (IsExist);
             //to store the new UserNationalID to LoginUserNationalID list ...
             LoginUserNationalID.Add(UserNationalID);
+            //to store the new UserPassword to LoginUserPassword list ...
+            LoginUserPassword.Add(UserPassword);
             Console.WriteLine("Your sing in process done successfully");
             HoldScreen();//just to hold a second ...
 
@@ -1145,7 +1185,7 @@ namespace MiniProjectBankSystem
             }
         }
         //8.10. SaveLoginUserNationalIDToFile method ...
-        public static void SaveLoginUserNationalIDToFile()
+        public static void SaveLoginUserToFile()
         {
             try
             {
@@ -1156,7 +1196,10 @@ namespace MiniProjectBankSystem
                 {
                     for (int i = 0; i < LoginUserNationalID.Count; i++)
                     {
-                        writer.WriteLine(LoginUserNationalID[i]);
+                        //to compaine user national id with password from their list to one txt file 
+                        string dataLine = $"{LoginUserNationalID[i]},{LoginUserPassword[i]}";
+
+                        writer.WriteLine(dataLine);
                     }
                 }
                 Console.WriteLine("Login info for end users saved successfully.");
@@ -1329,8 +1372,8 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.16. LoadLoginUserNationalIDFromFile method ...
-        public static void LoadLoginUserNationalIDFromFile()
+        //8.16. LoadLoginUserFromFile method ...
+        public static void LoadLoginUserFromFile()
         {
             try
             {
@@ -1343,13 +1386,18 @@ namespace MiniProjectBankSystem
                 }
                 //to make sure that LoginUserNationalID list is clear ...
                 LoginUserNationalID.Clear();
+                //to make sure that LoginUserPassword list is clear ...
+                LoginUserPassword.Clear();
                 //loading process start here
                 using (StreamReader reader = new StreamReader(EndUsersFilePath))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        LoginUserNationalID.Add(line);
+                        string[] parts = line.Split(',');
+                        //to add the information to the lists ...
+                        LoginUserNationalID.Add(parts[0]);
+                        LoginUserPassword.Add(parts[1]);
                     }
                 }
                 Console.WriteLine("Login info for end users loaded successfully.");
