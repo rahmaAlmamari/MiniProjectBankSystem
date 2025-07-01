@@ -52,7 +52,7 @@ namespace MiniProjectBankSystem
         //1.15. LoginAdminPassword list to store admin password
         static List<string> LoginAdminPassword = new List<string>();
         //1.16. LockedAccounts list to store locked accounts
-        static List<int> LockedAccounts = new List<int>();
+        static List<string> LockedAccounts = new List<string>();
         //1.17. LockedAccountsFilePath to store lockedAccounts.txt path
         const string LockedAccountsFilePath = "lockedAccounts.txt";
 
@@ -1148,34 +1148,60 @@ namespace MiniProjectBankSystem
         //8.2. Log in method ...
         public static void LogIn()
         {
-            //to check if the user account is locked or not ...
-
-            //to get NationalID from the user ...
-            string UserNationalID;
-            //to get Password from the user ...
-            string UserPassword;
-            //to get and validate UserNationalID input ...
-            UserNationalID = StringValidation("national ID");
-            UserPassword = ReadPassword("Password");
-            //to hash the password ...
-            //string UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
-
-            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPassword, LoginUserPassword))
+            //to redirct the user to the correct menu based on his national id and password ...
+            bool isNotLocked = true;
+            int countre = 0; // to count the number of attempts ...
+            do
             {
-                //to call EndUserMenu method ...
-                EndUserMenu(UserNationalID);
-            }
-            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPassword, LoginAdminPassword))
-            {
-                //to call AdmainMenu method ...
-                AdmainMenu(UserNationalID);
-            }
-            else
-            {
-                Console.WriteLine("Sorry ... your national id or password is " +
-                                  "not a exist in the system.");
-                HoldScreen();
-            }
+                //to get NationalID from the user ...
+                string UserNationalID;
+                //to get Password from the user ...
+                string UserPassword;
+                //to get and validate UserNationalID input ...
+                UserNationalID = StringValidation("national ID");
+                UserPassword = ReadPassword("Password");
+                //to check if the user account is locked or not ...
+                for (int i = 0; i < LockedAccounts.Count; i++)
+                {
+                    if (LockedAccounts[i] == UserNationalID)
+                    {
+                        Console.WriteLine("Your account is locked, please contact support.");
+                        HoldScreen();
+                        return; //to stop the method ...
+                    }
+                }
+                if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPassword, LoginUserPassword))
+                {
+                    //to call EndUserMenu method ...
+                    EndUserMenu(UserNationalID);
+                }
+                else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPassword, LoginAdminPassword))
+                {
+                    //to call AdmainMenu method ...
+                    AdmainMenu(UserNationalID);
+                }
+                else
+                {
+                    Console.WriteLine("Sorry ... your national id or password is " +
+                                      "not a exist in the system.");
+                    countre++;
+                    HoldScreen();
+                    //to check if the user enter wrong national id or password 3 times ...
+                    if (countre >= 3)
+                    {
+                        Console.WriteLine("Your account is locked due to multiple failed login attempts.");
+                        //to add the user national id to the LockedAccounts list ...
+                        LockedAccounts.Add(UserNationalID);
+                        isNotLocked = false; //to stop the loop ...
+                        HoldScreen();
+                    }
+                    else
+                    {
+                        isNotLocked = true; //to continue the loop ...
+                    }
+                }
+            } while(isNotLocked);//to loop until the user enter correct national id and password ...
+            
         }
         //8.3. WelcomeMessage method ...
         public static void WelcomeMessage()
