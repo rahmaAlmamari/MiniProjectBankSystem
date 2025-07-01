@@ -1013,7 +1013,6 @@ namespace MiniProjectBankSystem
             return password.ToString();
         }
 
-
         //7.11. Check if the Password unique or not ...
         static bool PasswordIsUnique(string password, List<string> list)
         {
@@ -1021,6 +1020,8 @@ namespace MiniProjectBankSystem
             //to check if password is exist or not (password should be unique) ...
             foreach (var storedHashpassword in list)
             {
+                //to call VerifyPasswordPBKDF2 which will hash the password and
+                //compare it with the stored hash password ...
                 if (VerifyPasswordPBKDF2(password, storedHashpassword))
                 {
                     Console.WriteLine("Password is exist in the system.");
@@ -1031,25 +1032,8 @@ namespace MiniProjectBankSystem
             }
             return IsUnique; // No match
         }
-        //7.12. Verify password by comparing hashes
-        static bool VerifyPasswordPBKDF2(string password, string savedHash)
-        {
-            byte[] hashBytes = Convert.FromBase64String(savedHash);
 
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
-            byte[] hash = pbkdf2.GetBytes(20);
-
-            for (int i = 0; i < 20; i++)
-            {
-                if (hashBytes[i + 16] != hash[i])
-                    return false;
-            }
-            return true;
-        }
-        //7.13. To hashed Password ...
+        //7.12. To hashed Password ...
         public static string HashPasswordPBKDF2(string password)
         {
             using (var rng = new RNGCryptoServiceProvider())
@@ -1067,6 +1051,31 @@ namespace MiniProjectBankSystem
                 return Convert.ToBase64String(hashBytes);
             }
         }
+        //HashPasswordPBKDF2 -> this method hashes the user’s password securely using the
+        //PBKDF2 algorithm with a random salt, and returns the result as a Base64 string.
+
+        //7.13. Verify password by comparing hashes
+        static bool VerifyPasswordPBKDF2(string password, string savedHash)
+        {
+            byte[] hashBytes = Convert.FromBase64String(savedHash);
+
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (hashBytes[i + 16] != hash[i])
+                    return false;
+            }
+            return true;
+        }
+        //VerifyPasswordPBKDF2 -> this method verifies a user’s password by:
+        // 1. Extracting the original salt from the stored hash
+        // 2. Re-hashing the input password using the same salt
+        // 3. Comparing both hashes
 
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
