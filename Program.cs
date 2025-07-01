@@ -973,7 +973,25 @@ namespace MiniProjectBankSystem
             }
             return result;
         }
-        //7.10. Check if the Password unique or not ...
+        //7.10. To hashed Password ...
+        public static string HashPasswordPBKDF2(string password)
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] salt = new byte[16];
+                rng.GetBytes(salt);
+
+                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
+                byte[] hash = pbkdf2.GetBytes(20);
+
+                byte[] hashBytes = new byte[36];
+                Array.Copy(salt, 0, hashBytes, 0, 16);
+                Array.Copy(hash, 0, hashBytes, 16, 20);
+
+                return Convert.ToBase64String(hashBytes);
+            }
+        }
+        //7.11. Check if the Password unique or not ...
         public static bool PasswordIsUnique(string password, List<string> list)
         {
             bool IsUnique = true;//it is unique (not exsit in the system) ...
@@ -992,6 +1010,7 @@ namespace MiniProjectBankSystem
             //to return if exist or not ... 
             return IsUnique;
         }
+
 
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
@@ -1014,13 +1033,16 @@ namespace MiniProjectBankSystem
             } while (IsExist);
             //to get Password from the user ...
             string UserPassword;
+            string UserPasswordHashed;
             do
             {
                 IsExist = false;
                 //to get and validate UserPassword input ...
                 UserPassword = StringValidation("Password");
-                bool UserPasswordIsExsit = PasswordIsUnique(UserPassword, LoginUserPassword);
-                bool AdminPasswordIsExsit = PasswordIsUnique(UserPassword, LoginAdminPassword);
+                //to hash the password ...
+                UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
+                bool UserPasswordIsExsit = PasswordIsUnique(UserPasswordHashed, LoginUserPassword);
+                bool AdminPasswordIsExsit = PasswordIsUnique(UserPasswordHashed, LoginAdminPassword);
                 if (!UserPasswordIsExsit || !UserPasswordIsExsit)
                 {
                     IsExist = true;
@@ -1029,7 +1051,7 @@ namespace MiniProjectBankSystem
             //to store the new UserNationalID to LoginUserNationalID list ...
             LoginUserNationalID.Add(UserNationalID);
             //to store the new UserPassword to LoginUserPassword list ...
-            LoginUserPassword.Add(UserPassword);
+            LoginUserPassword.Add(UserPasswordHashed);
             Console.WriteLine("Your sing in process done successfully");
             HoldScreen();//just to hold a second ...
 
