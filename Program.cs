@@ -1023,15 +1023,14 @@ namespace MiniProjectBankSystem
             {
                 if (VerifyPasswordPBKDF2(password, storedHashpassword))
                 {
+                    Console.WriteLine("Password is exist in the system.");
+                    HoldScreen();//just to hoad second ...
                     IsUnique = false;
                     return false; // Match found
                 }
             }
             return IsUnique; // No match
         }
-
-
-
         //7.12. Verify password by comparing hashes
         static bool VerifyPasswordPBKDF2(string password, string savedHash)
         {
@@ -1125,15 +1124,14 @@ namespace MiniProjectBankSystem
             UserNationalID = StringValidation("national ID");
             UserPassword = ReadPassword("Password");
             //to hash the password ...
-            string UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
+            //string UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
 
-            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPasswordHashed, LoginUserPassword))
+            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPassword, LoginUserPassword))
             {
                 //to call EndUserMenu method ...
-                Console.WriteLine("Welcome to End User Menu");
-                //EndUserMenu(UserNationalID);
+                EndUserMenu(UserNationalID);
             }
-            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPasswordHashed, LoginAdminPassword))
+            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPassword, LoginAdminPassword))
             {
                 //to call AdmainMenu method ...
                 AdmainMenu(UserNationalID);
