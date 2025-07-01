@@ -622,9 +622,9 @@ namespace MiniProjectBankSystem
         //6.5. Add new admin ...
         public static void AddNewAdmin()
         {
+            bool IsExist;
             //to get NationalID from the admin ...
             string AdminNationalID;
-            bool IsExist;
             do
             {
                 IsExist = false;
@@ -637,8 +637,27 @@ namespace MiniProjectBankSystem
                     IsExist = true;
                 }
             } while (IsExist);
+            //to get password from the admin ...
+            string AdminPassword;
+            string AdminPasswordHashed;
+            do
+            {
+                IsExist = false;
+                //to get and validate UserPassword input ...
+                AdminPassword = ReadPassword("Password");
+                //to hash the password ...
+                AdminPasswordHashed = HashPasswordPBKDF2(AdminPassword);
+                bool UserPasswordIsExsit = PasswordIsUnique(AdminPasswordHashed, LoginUserPassword);
+                bool AdminPasswordIsExsit = PasswordIsUnique(AdminPasswordHashed, LoginAdminPassword);
+                if (!UserPasswordIsExsit || !UserPasswordIsExsit)
+                {
+                    IsExist = true;
+                }
+            } while (IsExist);
             //to store the new UserNationalID to LoginUserNationalID list ...
             LoginAdminNationalID.Add(AdminNationalID);
+            //to store admin password to LoginAdminPassword list ...
+            LoginAdminPassword.Add(AdminPasswordHashed);
             Console.WriteLine("Adding new admin process done successfully");
             HoldScreen();//just to hold a second ...
         }
