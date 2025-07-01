@@ -3,6 +3,8 @@ using System.Xml.Linq;
 using System.Collections;
 using System.Collections.Generic;//to deal with list, stack and queue ...
 using System.IO;//to import Input output backage to deal with files ...
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiniProjectBankSystem
 {
