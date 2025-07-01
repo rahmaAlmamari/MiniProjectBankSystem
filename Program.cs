@@ -69,7 +69,7 @@ namespace MiniProjectBankSystem
             //to load the login info for end users to LoginUserNationalID and LoginUserPassword list...
             LoadLoginUserFromFile();
             //to load the login info for admin to LoginAdminNationalID list ...
-            LoadLoginAdminNationalIDFromFile();
+            LoadLoginAdminFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -1509,7 +1509,7 @@ namespace MiniProjectBankSystem
             }
         }
         //8.17. LoadLoginAdminNationalIDFromFile method ...
-        public static void LoadLoginAdminNationalIDFromFile()
+        public static void LoadLoginAdminFromFile()
         {
             try
             {
@@ -1520,15 +1520,20 @@ namespace MiniProjectBankSystem
                     HoldScreen();//to hold a second ...
                     return;//to stop the method ...
                 }
-                //to make sure that LoginUserNationalID list is clear ...
+                //to make sure that LoginAdminNationalID list is clear ...
                 LoginAdminNationalID.Clear();
+                //to make sure that LoginAdminPassword list is clear ...
+                LoginAdminPassword.Clear();
                 //loading process start here
                 using (StreamReader reader = new StreamReader(AdminsFilePath))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        LoginAdminNationalID.Add(line);
+                        string[] parts = line.Split(',');
+                        //to add the information to the lists ...
+                        LoginAdminNationalID.Add(parts[0]);
+                        LoginAdminPassword.Add(parts[1]);
                     }
                 }
                 Console.WriteLine("Login info for admin loaded successfully.");
