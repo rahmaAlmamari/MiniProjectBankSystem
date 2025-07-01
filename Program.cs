@@ -51,6 +51,10 @@ namespace MiniProjectBankSystem
         static List<string> LoginUserPassword = new List<string>();
         //1.15. LoginAdminPassword list to store admin password
         static List<string> LoginAdminPassword = new List<string>();
+        //1.16. LockedAccounts list to store locked accounts
+        static List<int> LockedAccounts = new List<int>();
+        //1.17. LockedAccountsFilePath to store lockedAccounts.txt path
+        const string LockedAccountsFilePath = "lockedAccounts.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -1144,6 +1148,8 @@ namespace MiniProjectBankSystem
         //8.2. Log in method ...
         public static void LogIn()
         {
+            //to check if the user account is locked or not ...
+
             //to get NationalID from the user ...
             string UserNationalID;
             //to get Password from the user ...
