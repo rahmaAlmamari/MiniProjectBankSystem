@@ -103,7 +103,7 @@ namespace MiniProjectBankSystem
                         //to save login info for end user to the file ...
                         SaveLoginUserToFile();
                         //to save login info for admin to the file ...
-                        SaveLoginAdminNationalIDToFile();
+                        SaveLoginAdminToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -1308,7 +1308,7 @@ namespace MiniProjectBankSystem
             }
         }
         //8.11. SaveLoginAdminNationalIDToFile method ...
-        public static void SaveLoginAdminNationalIDToFile()
+        public static void SaveLoginAdminToFile()
         {
             try
             {
@@ -1319,7 +1319,10 @@ namespace MiniProjectBankSystem
                 {
                     for (int i = 0; i < LoginAdminNationalID.Count; i++)
                     {
-                        writer.WriteLine(LoginAdminNationalID[i]);
+                        //to compaine user national id with password from their list to one txt file 
+                        string dataLine = $"{LoginAdminNationalID[i]},{LoginAdminPassword[i]}";
+
+                        writer.WriteLine(dataLine);
                     }
                 }
                 Console.WriteLine("Login info for admin saved successfully.");
