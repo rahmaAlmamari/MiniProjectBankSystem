@@ -973,7 +973,63 @@ namespace MiniProjectBankSystem
             }
             return result;
         }
-        //7.10. To hashed Password ...
+        //7.10. Check if the Password unique or not ...
+        //public static bool PasswordIsUnique(string password, List<string> list)
+        //{
+        //    bool IsUnique = true;//it is unique (not exsit in the system) ...
+        //    //to check if password is exist or not (password should be unique) ...
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        if (password == list[i])
+        //        {
+        //            Console.WriteLine("Password is exist in the system.");
+        //            HoldScreen();//just to hoad second ...
+        //            IsUnique = false;
+        //            break; //to stop the loop ...
+        //        }
+        //    }
+
+        //    //to return if exist or not ... 
+        //    return IsUnique;
+        //}
+
+
+        static bool PasswordIsUnique(string password, List<string> list)
+        {
+            bool IsUnique = true;//it is unique (not exsit in the system) ...
+            //to check if password is exist or not (password should be unique) ...
+            foreach (var storedHashpassword in list)
+            {
+                if (VerifyPasswordPBKDF2(password, storedHashpassword))
+                {
+                    IsUnique = false;
+                    return false; // Match found
+                }
+            }
+            return IsUnique; // No match
+        }
+
+
+
+        //7.11. Verify password by comparing hashes
+        static bool VerifyPasswordPBKDF2(string password, string savedHash)
+        {
+            byte[] hashBytes = Convert.FromBase64String(savedHash);
+
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (hashBytes[i + 16] != hash[i])
+                    return false;
+            }
+            return true;
+        }
+        //7.12. To hashed Password ...
         public static string HashPasswordPBKDF2(string password)
         {
             using (var rng = new RNGCryptoServiceProvider())
@@ -991,26 +1047,6 @@ namespace MiniProjectBankSystem
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        //7.11. Check if the Password unique or not ...
-        public static bool PasswordIsUnique(string password, List<string> list)
-        {
-            bool IsUnique = true;//it is unique (not exsit in the system) ...
-            //to check if NationalID is exist or not (NationalID should be unique) ...
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (password == list[i])
-                {
-                    Console.WriteLine("Password is exist in the system.");
-                    HoldScreen();//just to hoad second ...
-                    IsUnique = false;
-                    break; //to stop the loop ...
-                }
-            }
-
-            //to return if exist or not ... 
-            return IsUnique;
-        }
-
 
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
@@ -1052,6 +1088,7 @@ namespace MiniProjectBankSystem
             LoginUserNationalID.Add(UserNationalID);
             //to store the new UserPassword to LoginUserPassword list ...
             LoginUserPassword.Add(UserPasswordHashed);
+            //Console.WriteLine(UserPasswordHashed);
             Console.WriteLine("Your sing in process done successfully");
             HoldScreen();//just to hold a second ...
 
@@ -1061,21 +1098,28 @@ namespace MiniProjectBankSystem
         {
             //to get NationalID from the user ...
             string UserNationalID;
+            //to get Password from the user ...
+            string UserPassword;
             //to get and validate UserNationalID input ...
             UserNationalID = StringValidation("national ID");
-            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID))
+            UserPassword = StringValidation("Password");
+            //to hash the password ...
+            string UserPasswordHashed = HashPasswordPBKDF2(UserPassword);
+
+            if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPasswordHashed, LoginUserPassword))
             {
                 //to call EndUserMenu method ...
-                EndUserMenu(UserNationalID);
+                Console.WriteLine("Welcome to End User Menu");
+                //EndUserMenu(UserNationalID);
             }
-            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID))
+            else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPasswordHashed, LoginAdminPassword))
             {
                 //to call AdmainMenu method ...
                 AdmainMenu(UserNationalID);
             }
             else
             {
-                Console.WriteLine("Sorry ... this national id is " +
+                Console.WriteLine("Sorry ... your national id or password is " +
                                   "not a exist in the system.");
                 HoldScreen();
             }
