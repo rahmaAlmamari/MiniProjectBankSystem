@@ -1174,11 +1174,13 @@ namespace MiniProjectBankSystem
                 {
                     //to call EndUserMenu method ...
                     EndUserMenu(UserNationalID);
+                    return; //to stop the method ...
                 }
                 else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPassword, LoginAdminPassword))
                 {
                     //to call AdmainMenu method ...
                     AdmainMenu(UserNationalID);
+                    return; //to stop the method ...
                 }
                 else
                 {
