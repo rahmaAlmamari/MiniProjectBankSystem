@@ -143,6 +143,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("5. Submit review");//to submit message with what you like and what not to the admin ...
                 Console.WriteLine("6. Transfer money between accounts");
                 Console.WriteLine("7. Undo last complaint submitted");
+                Console.WriteLine("8. Update Account Information");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -175,6 +176,10 @@ namespace MiniProjectBankSystem
 
                     case "7"://to call UndoLastComplaintSubmitted method ...
                         UndoLastComplaintSubmitted(nationalId);
+                        break;
+
+                    case "8"://to call UpdateAccountInfo method ...
+                        UpdateAccountInfo(nationalId);
                         break;
 
                     case "0"://to exsit EndUserMenu ...
@@ -549,6 +554,47 @@ namespace MiniProjectBankSystem
                         return;//to stop the method ...
                     }
                  
+                }
+            }
+        }
+        //5.8. Update Account Info ...
+        public static void UpdateAccountInfo(string id)
+        {
+            //to check if the national id exist ...
+            bool IsExist = NationalIDIsUnique(id, nationalID);
+            if (IsExist)
+            {
+                Console.WriteLine("Sorry the national id you entered is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                //to get user index ...
+                int index = nationalID.IndexOf(id);
+                //to display user info ...
+                Console.WriteLine("Your account info:");
+                Console.WriteLine($"User Name: {accountUserNames[index]}\n" +
+                                  $"User Phone Number: {accountPhoneNumbers[index]}\n" +
+                                  $"User Address:{accountAddresses[index]}");
+                Console.WriteLine("-----------------------------------------");
+                Console.WriteLine("Please enter the new info:");
+                //to get the new user name from the user ...
+                string NewUserName = StringNamingValidation("new user name");
+                //to get the new phone number from the user ...
+                string NewPhoneNumber = GetAndCheckPhoneNumberIsValid("new phone number");
+                //to get the new address from the user ...
+                string NewAddress = StringValidation("new address");
+                //to confirm user action ...
+                bool action = ConfirmAction("update your account info");
+                if (action)
+                {
+                    //to update the account info in the lists ...
+                    accountUserNames[index] = NewUserName;
+                    accountPhoneNumbers[index] = NewPhoneNumber;
+                    accountAddresses[index] = NewAddress;
+                    Console.WriteLine("Your account info updated successfully");
+                    HoldScreen();//just to hold a second ...
                 }
             }
         }
