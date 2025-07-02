@@ -206,6 +206,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("8. Show total bank balance");
                 Console.WriteLine("9. Show Top 3 Richest Customers");
                 Console.WriteLine("10. Export All Account Info to a New File");
+                Console.WriteLine("11. Unlock Locked Accounts");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string AdmainMenuRunOption = StringValidation("option");
@@ -250,6 +251,10 @@ namespace MiniProjectBankSystem
 
                     case "10"://to call ExportAllAccountInfoToNewFile method ...
                         ExportAllAccountInfoToNewFile();
+                        break;
+
+                    case "11"://to call UnlockLockedAccounts method ...
+                        UnlockLockedAccounts();
                         break;
 
                     case "0"://to exsit AdmainMenuRun ...
@@ -811,6 +816,49 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Error exporting account info: " + e.Message);
                 HoldScreen();//just to hold a second ...
 
+            }
+        }
+        //6.11. Unlock Locked Accounts ...
+        public static void UnlockLockedAccounts()
+        {
+            //to check if there is locked accounts or not ...
+            if (LockedAccounts.Count == 0)
+            {
+                Console.WriteLine("There is no locked accounts yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method ...
+            }
+            //to display all locked accounts ...
+            Console.WriteLine("National ID For Locked Accounts:");
+            foreach (string account in LockedAccounts)
+            {
+                Console.WriteLine(account);
+            }
+            //to get the account number to unlock it ...
+            string NationalID = StringValidation("national id number you want to unlock");
+            //to check if the NationalID exist in the locked accounts or not ...
+            bool IsExist = LockedAccounts.Contains(NationalID);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry the national id number you entered is not exist in the locked accounts!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                //to confirm the user action to unlock the account ...
+                bool action = ConfirmAction("unlock this account");
+                if (action)
+                {
+                    LockedAccounts.Remove(NationalID);
+                    Console.WriteLine($"Account number with national id: '{NationalID}' is unlocked successfully");
+                    HoldScreen();//to hold the screen ...
+                }
+                else
+                {
+                    Console.WriteLine("Unlock process stoped");
+                    HoldScreen();//just to hold a second ...
+                }
             }
         }
 
