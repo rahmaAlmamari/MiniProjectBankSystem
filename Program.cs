@@ -157,6 +157,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("7. Undo last complaint submitted");
                 Console.WriteLine("8. Update Account Information");
                 Console.WriteLine("9. Print All Account Transactions");
+                Console.WriteLine("10. Show Last N Transactions");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -197,6 +198,10 @@ namespace MiniProjectBankSystem
 
                     case "9": //to call PrintAllAccountTransactions method ...
                         PrintAllAccountTransactions();
+                        break;
+
+                    case "10": //to call ShowLastNTransactions method ..
+                        ShowLastNTransactions();
                         break;
 
                     case "0"://to exsit EndUserMenu ...
@@ -678,6 +683,52 @@ namespace MiniProjectBankSystem
                                     $"{BalanceAfterTransaction[i]} \t\t" +
                                     $"{transactionDate[i]}");
                         Console.WriteLine("--------------------------------------------------");
+                    }
+
+
+                }
+                HoldScreen();//just to hold second ...}
+
+            }
+        }
+        //5.10. ShowLastNTransactions method ...
+        public static void ShowLastNTransactions()
+        {
+            if (transactionAccountNumbers.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                HoldScreen();//just to hold second ...
+                return;
+            }
+            //to get N (number of transction to be display) ...
+            int N = IntValidation("number of transction you want to see");
+            int counter = 0;
+            //to get the user account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("your account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry your account number is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                Console.WriteLine("All Transactions Founded For Your Account Number:");
+                Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
+                for (int i = transactionAccountNumbers.Count -1; i >= 0 ; i--)
+                {
+                    if (transactionAccountNumbers[i] == AccountNumber.ToString() && counter < N)
+                    {
+                        Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
+                                    $"{transactionType[i]} \t\t" +
+                                    $"{transactionAmount[i]}\t\t" +
+                                    $"{BalanceAfterTransaction[i]} \t\t" +
+                                    $"{transactionDate[i]}");
+                        Console.WriteLine("--------------------------------------------------");
+                        counter++;
                     }
 
 
