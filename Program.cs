@@ -156,6 +156,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("6. Transfer money between accounts");
                 Console.WriteLine("7. Undo last complaint submitted");
                 Console.WriteLine("8. Update Account Information");
+                Console.WriteLine("9. Print All Account Transactions");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -194,6 +195,10 @@ namespace MiniProjectBankSystem
                         UpdateAccountInfo(nationalId);
                         break;
 
+                    case "9": //to call PrintAllAccountTransactions method ...
+                        PrintAllAccountTransactions();
+                        break;
+
                     case "0"://to exsit EndUserMenu ...
                         EndUserMenuRun = false;
                         break;
@@ -226,6 +231,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("9. Show Top 3 Richest Customers");
                 Console.WriteLine("10. Export All Account Info to a New File");
                 Console.WriteLine("11. Unlock Locked Accounts");
+                Console.WriteLine("12. Print All Transactions");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string AdmainMenuRunOption = StringValidation("option");
@@ -274,6 +280,10 @@ namespace MiniProjectBankSystem
 
                     case "11"://to call UnlockLockedAccounts method ...
                         UnlockLockedAccounts();
+                        break;
+
+                    case "12"://to call PrintAllTransactions method ...
+                        PrintAllTransactions();
                         break;
 
                     case "0"://to exsit AdmainMenuRun ...
@@ -536,9 +546,9 @@ namespace MiniProjectBankSystem
                     Console.WriteLine($"Your transfer process done successfully.\n" +
                                       $"Your new balance is: {Transfer}");
                     //to store the transaction details in the lists ...
-                    StoreTransactions(AccountNumber.ToString(), "Transfer to anther account", TransferMoney.ToString(),
+                    StoreTransactions(AccountNumber.ToString(), "TransferTo", TransferMoney.ToString(),
                                           Transfer.ToString());
-                    StoreTransactions(ToAccountNumber.ToString(), "Transfer from anther account", TransferMoney.ToString(),
+                    StoreTransactions(ToAccountNumber.ToString(), "TransferFrom", TransferMoney.ToString(),
                                           balances[ToAccountNumberIndex].ToString());
                     //HoldScreen();//just to hold the screen ...
                 }
@@ -632,6 +642,48 @@ namespace MiniProjectBankSystem
                     Console.WriteLine("Your account info updated successfully");
                     HoldScreen();//just to hold a second ...
                 }
+            }
+        }
+        //5.9.  PrintAllAccountTransactions method ...
+        public static void PrintAllAccountTransactions()
+        {
+            if (transactionAccountNumbers.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                HoldScreen();//just to hold second ...
+                return;
+            }
+            //to enter the user account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("your account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry your account number is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                Console.WriteLine("All Transactions Founded For Your Account Number:");
+                Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
+                for (int i = 0; i < transactionAccountNumbers.Count; i++)
+                {
+                    if (transactionAccountNumbers[i] == AccountNumber.ToString())
+                    {
+                        Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
+                                    $"{transactionType[i]} \t\t" +
+                                    $"{transactionAmount[i]}\t\t" +
+                                    $"{BalanceAfterTransaction[i]} \t\t" +
+                                    $"{transactionDate[i]}");
+                        Console.WriteLine("--------------------------------------------------");
+                    }
+
+
+                }
+                HoldScreen();//just to hold second ...}
+
             }
         }
 
@@ -961,6 +1013,28 @@ namespace MiniProjectBankSystem
                     HoldScreen();//just to hold a second ...
                 }
             }
+        }
+        //6.12.  PrintAllTransactions method ...
+        public static void PrintAllTransactions()
+        {
+            if (transactionAccountNumbers.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                HoldScreen();//just to hold second ...
+                return;
+            }
+            Console.WriteLine("All Transactions:");
+            Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");            
+            for (int i = 0; i < transactionAccountNumbers.Count; i++)
+            {
+                Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
+                                  $"{transactionType[i]} \t\t" +
+                                  $"{transactionAmount[i]}\t\t" +
+                                  $"{BalanceAfterTransaction[i]} \t\t" +
+                                  $"{transactionDate[i]}");
+                Console.WriteLine("--------------------------------------------------");
+            }
+            HoldScreen();//just to hold second ...
         }
 
         //============================ 7. Validation =============================
@@ -2039,7 +2113,5 @@ namespace MiniProjectBankSystem
         }
 
 
-
-
-        }
+    }
 }
