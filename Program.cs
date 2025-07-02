@@ -1276,8 +1276,7 @@ namespace MiniProjectBankSystem
                             return; //to stop the method ...
                         }
                     }
-                    Console.WriteLine("Sorry ... your national id or password is " +
-                                    "not a exist in the system.");
+                    Console.WriteLine("Accusse stop ... Sory you are not a admin");
                     AdminCountre++;
                     isNotLocked = CheckSignInCounter(UserNationalID, AdminCountre);
                     HoldScreen();
