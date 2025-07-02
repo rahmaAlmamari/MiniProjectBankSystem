@@ -22,6 +22,8 @@ namespace MiniProjectBankSystem
         static List<string> accountUserNames = new List<string>();
         static List<string> nationalID = new List<string>();
         static List<double> balances = new List<double>();
+        static List<string> accountPhoneNumbers = new List<string>();
+        static List<string> accountAddresses = new List<string>();
         //1.5. reviewsStack stack ...
         static Stack<string> reviewsStack = new Stack<string>();
         static List<string> reviewsNationalID = new List<string>();
@@ -276,7 +278,7 @@ namespace MiniProjectBankSystem
         {
             //to get the input from the user ...
             string UserName = StringNamingValidation("name");//to get and validate UserName input ...
-            //string UserNationalID = StringValidation("national ID");//to get and validate UserNationalID input ...
+            //to get and validate UserNationalID input ...
             string UserNationalID = nationalID_user;
             bool NationalIDIsExist = CheckDuplicateAccountRequests(UserNationalID);
             if (NationalIDIsExist)
@@ -285,6 +287,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
                 return;//to stop the method ...
             }
+            //to get and validate InitialBalance input ...
             bool BalanceIsValide;
             double InitialBalance;
             do
@@ -292,8 +295,20 @@ namespace MiniProjectBankSystem
                 InitialBalance = DoubleValidation("initial balance");//to get and validate InitialBalance input ...
                 BalanceIsValide = CheckBalanceEqualsMinimumBalance(InitialBalance);//to check if InitialBalance > MinimumBalance or not ...
             } while (!BalanceIsValide);
+            //to get and validate UserPhoneNumber input ...
+            string UserPhoneNumber;
+            bool PhoneNumberIsExist = false;
+            do
+            {
+                UserPhoneNumber = GetAndCheckPhoneNumberIsValid("phone number");
+                //to check if the phone number is exist in the accountPhoneNumbers list or not ...
+                PhoneNumberIsExist = PhoneNumberIsUnique(UserPhoneNumber, accountPhoneNumbers);
+            } while (!PhoneNumberIsExist);
+            //to get and validate UserAddress input ...
+            string UserAddress = StringValidation("address");//to get and validate UserAddress input ...
+
             //to combain all the input together and store it in createAccountRequests queue ...
-            string request = UserName + "|" + UserNationalID+"|"+ InitialBalance;
+            string request = UserName + "|" + UserNationalID + "|" + InitialBalance + "|" + UserPhoneNumber + "|" + UserAddress;
             createAccountRequests.Enqueue(request);
             int num = createAccountRequests.Count();
             Console.WriteLine("Your request submited successfully");
@@ -574,7 +589,9 @@ namespace MiniProjectBankSystem
             Console.WriteLine("The first request in queue:");
             Console.WriteLine($"User Name: {RequestDteials[0]}\n" +
                               $"User National ID: {RequestDteials[1]}\n" +
-                              $"Initial Balance: {RequestDteials[2]}");
+                              $"Initial Balance: {RequestDteials[2]}\n" +
+                              $"User Phone Number: {RequestDteials[3]}\n" +
+                              $"User Address:{RequestDteials[4]}" );
             bool action = ConfirmAction("approved this request");
             if (action)
             {
@@ -586,6 +603,8 @@ namespace MiniProjectBankSystem
                 accountUserNames.Add(RequestDteials[0]);
                 nationalID.Add(RequestDteials[1]);
                 balances.Add(Convert.ToDouble(RequestDteials[2]));//to convert RequestDteials from string to double ...
+                accountPhoneNumbers.Add(RequestDteials[3]);
+                accountAddresses.Add(RequestDteials[4]);
 
                 Console.WriteLine($"Account created successfully for: {RequestDteials[0]}\n" +
                     $" with Account Number: {newAccountNumber}");
@@ -1034,20 +1053,25 @@ namespace MiniProjectBankSystem
             return IsUnique;
         }
         //7.9. Check  Duplicate Account Requests ...
-        public static bool CheckDuplicateAccountRequests(string id)
+        static bool CheckDuplicateAccountRequests(string id)
         {
-            bool result = false;
-            foreach(string request in createAccountRequests)
+            foreach (string request in createAccountRequests)
             {
-                string[] RequestDteials = request.Split('|').ToArray();
-                if(id == RequestDteials[1])
+                if (string.IsNullOrWhiteSpace(request))
+                    continue;
+
+                string[] requestDetails = request.Split('|');
+
+                // Check that the request has at least 1 element
+                if (requestDetails.Length > 0 && requestDetails[1] == id)
                 {
-                    result = true;
-                    break;
-                }  
+                    return true; // Duplicate found
+                }
             }
-            return result;
+
+            return false; // No duplicates
         }
+
 
         //7.10. To read password from the user and validate it ...
         public static string ReadPassword(string message)
@@ -1170,6 +1194,46 @@ namespace MiniProjectBankSystem
             {
                 return isNotLocked = true; //to continue the loop ...
             }
+        }
+
+        //7.15. To check and validate the phone number input from the user ...
+        public static string GetAndCheckPhoneNumberIsValid(string message)
+        {
+            bool PhoneFlag = false;//to handle user phone error input ...
+            string PhoneInput = "null";
+            do
+            {
+                Console.WriteLine($"Enter your {message}:");
+                PhoneInput = Console.ReadLine();
+                //to check if PhoneInput has number or not ...
+                if (string.IsNullOrWhiteSpace(PhoneInput) || !Regex.IsMatch(PhoneInput, @"^\d{8}$"))
+                {
+                    Console.WriteLine($"{message} must be 8 digits and can not be null ..." +
+                                      "please prass enter key to try again");
+                    Console.ReadLine();//just to hoad second ...
+                    PhoneFlag = true;
+                }
+            } while (PhoneFlag);
+            //to return tne char input ...
+            return PhoneInput;
+        }
+
+        //7.16. To check if user phone number is unique or not ...
+        public static bool PhoneNumberIsUnique(string phone, List<string> list)
+        {
+            bool IsUnique = true;//it is unique (not exsit in the system) ...
+            //to check if phone is exist or not (phone should be unique) ...
+            foreach (var storedPhone in list)
+            {
+                if (phone == storedPhone)
+                {
+                    Console.WriteLine("Phone number is exist in the system.");
+                    HoldScreen();//just to hoad second ...
+                    IsUnique = false;
+                    return false; // Match found
+                }
+            }
+            return IsUnique; // No match
         }
 
         //============================ 8. Addtional methods ======================
@@ -1356,7 +1420,8 @@ namespace MiniProjectBankSystem
                         //together in one varible and give it to writer to wrote
                         //in AccountsFilePath
                         string dataLine = $"{accountNumbers[i]},{accountUserNames[i]}," +
-                                          $"{nationalID[i]},{balances[i]}";
+                                          $"{nationalID[i]},{balances[i]}," +
+                                          $"{accountPhoneNumbers[i]},{accountAddresses[i]}";
                         writer.WriteLine(dataLine);
                     }
                 }
@@ -1537,6 +1602,8 @@ namespace MiniProjectBankSystem
                 accountUserNames.Clear();
                 nationalID.Clear();
                 balances.Clear();
+                accountPhoneNumbers.Clear();
+                accountAddresses.Clear();
                 //loading process start here
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -1550,6 +1617,8 @@ namespace MiniProjectBankSystem
                         accountUserNames.Add(parts[1]);
                         nationalID.Add(parts[2]);
                         balances.Add(Convert.ToDouble(parts[3]));
+                        accountPhoneNumbers.Add(parts[4]);
+                        accountAddresses.Add(parts[5]);
 
                         if (accNum > LastAccountNumber)
                             LastAccountNumber = accNum;
@@ -1604,33 +1673,27 @@ namespace MiniProjectBankSystem
             try
             {
                 if (!File.Exists(RequestsFilePath)) return;
-                //to store file data temperey and then
-                //store data in the right order in the createAccountRequests
-                //Queue<string> TempStoreRequests = new Queue<string>();
+
                 using (StreamReader reader = new StreamReader(RequestsFilePath))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        //TempStoreRequests.Enqueue(line);
+                        // Skip empty lines
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+
                         createAccountRequests.Enqueue(line);
                     }
                 }
-                //to clear createAccountRequests ...
-                //createAccountRequests.Clear();
-                //loop to store request from TempStore to createAccountRequests
-                //in the right order
-                //foreach (string request in TempStoreRequests)
-                //{
-                //    createAccountRequests.Enqueue(request);
-                //}
+
                 Console.WriteLine("Requests accounts opening loaded successfully.");
-                HoldScreen();//just to hold a second ...
+                HoldScreen();
             }
             catch
             {
-                Console.WriteLine("Error loading reviews.");
-                HoldScreen();//just to hold a second ...
+                Console.WriteLine("Error loading requests.");
+                HoldScreen();
             }
         }
         //8.17. LoadLoginUserFromFile method ...
@@ -1670,7 +1733,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.18. LoadLoginAdminNationalIDFromFile method ...
+        //8.17. LoadLoginAdminNationalIDFromFile method ...
         public static void LoadLoginAdminFromFile()
         {
             try
@@ -1707,7 +1770,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.19. LoadReviewsNationalId method ...
+        //8.18. LoadReviewsNationalId method ...
         public static void LoadReviewsNationalId()
         {
             try
@@ -1732,7 +1795,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.20. LoadLockedAccounts method ...
+        //8.19. LoadLockedAccounts method ...
         public static void LoadLockedAccounts()
         {
             try
@@ -1759,7 +1822,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.21. SearchAccountByNationalID method ...
+        //8.20. SearchAccountByNationalID method ...
         public static void SearchAccountByNationalID()
         {
             bool FoundFlag = true;
@@ -1784,7 +1847,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.22. SearchAccountByName method ...
+        //8.21. SearchAccountByName method ...
         public static void SearchAccountByName()
         {
             bool FoundFlag = true;
