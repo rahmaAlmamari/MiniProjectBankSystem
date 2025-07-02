@@ -57,6 +57,14 @@ namespace MiniProjectBankSystem
         static List<string> LockedAccounts = new List<string>();
         //1.17. LockedAccountsFilePath to store lockedAccounts.txt path
         const string LockedAccountsFilePath = "lockedAccounts.txt";
+        //1.18. lists to store Transaction data (parallel)
+        static List<string> transactionAccountNumbers = new List<string>();
+        static List<string> transactionType = new List<string>();
+        static List<string> transactionAmount = new List<string>();
+        static List<string> BalanceAfterTransaction = new List<string>();
+        static List<string> transactionDate = new List<string>();
+        //1.19. TransactionFilePath to store transactions.txt path
+        const string TransactionFilePath = "transactions.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -78,6 +86,8 @@ namespace MiniProjectBankSystem
             LoadLoginAdminFromFile();
             //to load the locked accounts to LockedAccounts list ...
             LoadLockedAccounts();
+            //to load the transaction details from the file and store it into the lists ...
+            LoadTransactionsFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -114,6 +124,8 @@ namespace MiniProjectBankSystem
                         SaveLoginAdminToFile();
                         //to save locked accounts to the file ...
                         SaveLockedAccounts();
+                        //to save transaction details to the file ...
+                        SaveTransactionsToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -357,6 +369,13 @@ namespace MiniProjectBankSystem
                 balances[index] = Deposite;
                 Console.WriteLine($"Your deposite process done successfully.\n" +
                                   $"Your new balance is: {Deposite}");
+                //to store the transaction details in the lists ...
+                transactionAccountNumbers.Add(AccountNumber.ToString());
+                transactionType.Add("Deposite");
+                transactionAmount.Add(DepositeMoney.ToString());
+                BalanceAfterTransaction.Add(Deposite.ToString());
+                transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
+                Console.WriteLine("Transaction details saved successfully.");
                 HoldScreen();//just to hold the screen ...
             }
         }
@@ -403,6 +422,13 @@ namespace MiniProjectBankSystem
                     balances[index] = Withdraw;
                     Console.WriteLine($"Your withdraw process done successfully.\n" +
                                       $"Your new balance is: {Withdraw}");
+                    //to store the transaction details in the lists ...
+                    transactionAccountNumbers.Add(AccountNumber.ToString());
+                    transactionType.Add("Withdraw");
+                    transactionAmount.Add(WithdrawMoney.ToString());
+                    BalanceAfterTransaction.Add(Withdraw.ToString());
+                    transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
+                    Console.WriteLine("Transaction details saved successfully.");
                     HoldScreen();//just to hold the screen ...
                 }
             }
@@ -1630,8 +1656,37 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-
-        //8.14. LoadAccountsInformationFromFile method ...
+        //8.14. SaveTransactionsToFile method ...
+        public static void SaveTransactionsToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(TransactionFilePath))
+                {
+                    for (int i = 0; i < transactionAccountNumbers.Count; i++)
+                    {
+                        //to compaine all the end transcation data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in TransactionFilePath
+                        string dataLine = $"{transactionAccountNumbers[i]},{transactionType[i]}," +
+                                          $"{transactionAmount[i]},{BalanceAfterTransaction[i]}," +
+                                          $"{transactionDate[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine("Transaction saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving transaction data into the file.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.15. LoadAccountsInformationFromFile method ...
         public static void LoadAccountsInformationFromFile()
         {
             try
@@ -1675,11 +1730,53 @@ namespace MiniProjectBankSystem
             }
             catch
             {
-                Console.WriteLine("Error loading file.");
+                Console.WriteLine("Error loading account file.");
                 HoldScreen();
             }
         }
-        //8.15. LoadReviews method ...
+        //8.16. LoadTransactionsFromFile
+        public static void LoadTransactionsFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(TransactionFilePath))
+                {
+                    Console.WriteLine("Sorry ... no saved data found in transactions.txt file.");
+                    HoldScreen();//to hold a second ...
+                    return;//to stop the method ...
+                }
+                //to make sure that our lists are clear ...
+                transactionAccountNumbers.Clear();
+                transactionType.Clear();
+                transactionAmount.Clear();
+                BalanceAfterTransaction.Clear();
+                transactionDate.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(TransactionFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(',');
+                        //to add the information to the lists ...
+                        transactionAccountNumbers.Add(parts[0]);
+                        transactionType.Add(parts[1]);
+                        transactionAmount.Add(parts[2]);
+                        BalanceAfterTransaction.Add(parts[3]);
+                        transactionDate.Add(parts[4]);
+                    }
+                }
+                Console.WriteLine("Transactions loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading transactions file.");
+                HoldScreen();
+            }
+        }
+        //8.16. LoadReviews method ...
         public static void LoadReviews()
         {
             try
@@ -1713,7 +1810,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.16. LoadSaveRequestAccountOpening method ...
+        //8.17. LoadSaveRequestAccountOpening method ...
         public static void LoadSaveRequestAccountOpening()
         {
             try
@@ -1742,7 +1839,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.17. LoadLoginUserFromFile method ...
+        //8.18. LoadLoginUserFromFile method ...
         public static void LoadLoginUserFromFile()
         {
             try
@@ -1779,7 +1876,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.17. LoadLoginAdminNationalIDFromFile method ...
+        //8.19. LoadLoginAdminNationalIDFromFile method ...
         public static void LoadLoginAdminFromFile()
         {
             try
@@ -1816,7 +1913,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-        //8.18. LoadReviewsNationalId method ...
+        //8.20. LoadReviewsNationalId method ...
         public static void LoadReviewsNationalId()
         {
             try
@@ -1841,7 +1938,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.19. LoadLockedAccounts method ...
+        //8.21. LoadLockedAccounts method ...
         public static void LoadLockedAccounts()
         {
             try
@@ -1868,7 +1965,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
-        //8.20. SearchAccountByNationalID method ...
+        //8.22. SearchAccountByNationalID method ...
         public static void SearchAccountByNationalID()
         {
             bool FoundFlag = true;
@@ -1893,7 +1990,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        //8.21. SearchAccountByName method ...
+        //8.23. SearchAccountByName method ...
         public static void SearchAccountByName()
         {
             bool FoundFlag = true;
