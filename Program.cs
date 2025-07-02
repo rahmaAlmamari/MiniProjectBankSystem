@@ -370,13 +370,15 @@ namespace MiniProjectBankSystem
                 Console.WriteLine($"Your deposite process done successfully.\n" +
                                   $"Your new balance is: {Deposite}");
                 //to store the transaction details in the lists ...
-                transactionAccountNumbers.Add(AccountNumber.ToString());
-                transactionType.Add("Deposite");
-                transactionAmount.Add(DepositeMoney.ToString());
-                BalanceAfterTransaction.Add(Deposite.ToString());
-                transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
-                Console.WriteLine("Transaction details saved successfully.");
-                HoldScreen();//just to hold the screen ...
+                StoreTransactions(AccountNumber.ToString(), "Deposite", Deposite.ToString(),
+                                      Deposite.ToString());
+                //transactionAccountNumbers.Add(AccountNumber.ToString());
+                //transactionType.Add("Deposite");
+                //transactionAmount.Add(DepositeMoney.ToString());
+                //BalanceAfterTransaction.Add(Deposite.ToString());
+                //transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
+                //Console.WriteLine("Transaction details saved successfully.");
+                //HoldScreen();//just to hold the screen ...
             }
         }
         //5.3. Withdraw money ...
@@ -423,13 +425,15 @@ namespace MiniProjectBankSystem
                     Console.WriteLine($"Your withdraw process done successfully.\n" +
                                       $"Your new balance is: {Withdraw}");
                     //to store the transaction details in the lists ...
-                    transactionAccountNumbers.Add(AccountNumber.ToString());
-                    transactionType.Add("Withdraw");
-                    transactionAmount.Add(WithdrawMoney.ToString());
-                    BalanceAfterTransaction.Add(Withdraw.ToString());
-                    transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
-                    Console.WriteLine("Transaction details saved successfully.");
-                    HoldScreen();//just to hold the screen ...
+                    StoreTransactions(AccountNumber.ToString(), "Withdraw", WithdrawMoney.ToString(),
+                                      Withdraw.ToString());
+                    //transactionAccountNumbers.Add(AccountNumber.ToString());
+                    //transactionType.Add("Withdraw");
+                    //transactionAmount.Add(WithdrawMoney.ToString());
+                    //BalanceAfterTransaction.Add(Withdraw.ToString());
+                    //transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
+                    //Console.WriteLine("Transaction details saved successfully.");
+                    //HoldScreen();//just to hold the screen ...
                 }
             }
         }//to take money from your account ...
@@ -505,6 +509,7 @@ namespace MiniProjectBankSystem
                 //to get money amount in the account ... it will be in the balance leater ...
                 double AccountMoney = 0;
                 int index = 0;
+                //to get accountNumber index ...
                 for (int i = 0; i < accountNumbers.Count; i++)
                 {
                     if (accountNumbers[i] == AccountNumber)
@@ -530,7 +535,12 @@ namespace MiniProjectBankSystem
                     balances[ToAccountNumberIndex] += TransferMoney;   
                     Console.WriteLine($"Your transfer process done successfully.\n" +
                                       $"Your new balance is: {Transfer}");
-                    HoldScreen();//just to hold the screen ...
+                    //to store the transaction details in the lists ...
+                    StoreTransactions(AccountNumber.ToString(), "Transfer to anther account", TransferMoney.ToString(),
+                                          Transfer.ToString());
+                    StoreTransactions(ToAccountNumber.ToString(), "Transfer from anther account", TransferMoney.ToString(),
+                                          balances[ToAccountNumberIndex].ToString());
+                    //HoldScreen();//just to hold the screen ...
                 }
             }
         }
@@ -2015,9 +2025,21 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold second ...
             }
         }
-        
+        //8.24.  StoreTransactions method ...
+        public static void StoreTransactions(string accountNumber, string type, string amount, string balanceAfterTransaction)
+        {
+            //to store the transaction data in the lists ...
+            transactionAccountNumbers.Add(accountNumber);
+            transactionType.Add(type);
+            transactionAmount.Add(amount);
+            BalanceAfterTransaction.Add(balanceAfterTransaction);
+            transactionDate.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Console.WriteLine("Transaction details saved successfully.");
+            HoldScreen();//just to hold second ...
+        }
 
 
 
-    }
+
+        }
 }
