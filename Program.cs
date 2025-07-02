@@ -1089,7 +1089,7 @@ namespace MiniProjectBankSystem
         }
 
         //7.11. Check if the Password unique or not ...
-        static bool PasswordIsUnique(string password, List<string> list)
+        public static bool PasswordIsUnique(string password, List<string> list)
         {
             bool IsUnique = true;//it is unique (not exsit in the system) ...
             //to check if password is exist or not (password should be unique) ...
@@ -1130,7 +1130,7 @@ namespace MiniProjectBankSystem
         //PBKDF2 algorithm with a random salt, and returns the result as a Base64 string.
 
         //7.13. Verify password by comparing hashes
-        static bool VerifyPasswordPBKDF2(string password, string savedHash)
+        public static bool VerifyPasswordPBKDF2(string password, string savedHash)
         {
             byte[] hashBytes = Convert.FromBase64String(savedHash);
 
@@ -1151,6 +1151,26 @@ namespace MiniProjectBankSystem
         // 1. Extracting the original salt from the stored hash
         // 2. Re-hashing the input password using the same salt
         // 3. Comparing both hashes
+
+        //7.14. To check singIn counter ...
+        public static bool CheckSignInCounter(string nationalID, int count)
+        {
+            bool isNotLocked = true; //to continue the loop ...
+            //to check if the user countre is more than 3 or not ...
+            if (count >= 3)
+            {
+                Console.WriteLine("Your account is locked due to multiple failed login attempts.");
+                //to add the user national id to the LockedAccounts list ...
+                LockedAccounts.Add(nationalID);
+                HoldScreen();
+                return isNotLocked = false; //to stop the loop ...
+                
+            }
+            else
+            {
+                return isNotLocked = true; //to continue the loop ...
+            }
+        }
 
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
@@ -1202,16 +1222,16 @@ namespace MiniProjectBankSystem
         {
             //to redirct the user to the correct menu based on his national id and password ...
             bool isNotLocked = true;
-            int countre = 0; // to count the number of attempts ...
+            int UserCountre = 0; // to count the number of attempts ...
+            int AdminCountre = 0; // to count the number of attempts ...
             do
             {
                 //to get NationalID from the user ...
-                string UserNationalID;
+                string UserNationalID = StringValidation("national ID");
                 //to get Password from the user ...
-                string UserPassword;
-                //to get and validate UserNationalID input ...
-                UserNationalID = StringValidation("national ID");
-                UserPassword = ReadPassword("Password");
+                string UserPassword = ReadPassword("Password");
+                //to get UserType from the user ...
+                char UserType = CharValidation("user type (U for user, A for admin)");
                 //to check if the user account is locked or not ...
                 for (int i = 0; i < LockedAccounts.Count; i++)
                 {
@@ -1222,40 +1242,53 @@ namespace MiniProjectBankSystem
                         return; //to stop the method ...
                     }
                 }
-                if (!NationalIDIsUnique(UserNationalID, LoginUserNationalID) && !PasswordIsUnique(UserPassword, LoginUserPassword))
+                if(UserType == 'U' || UserType == 'u')
                 {
-                    //to call EndUserMenu method ...
-                    EndUserMenu(UserNationalID);
-                    return; //to stop the method ...
+                    //to check if the user national id and password is exist in the user list ...
+                    for (int i = 0; i < LoginUserNationalID.Count; i++)
+                    {
+                        if (LoginUserNationalID[i] == UserNationalID &&
+                            VerifyPasswordPBKDF2(UserPassword, LoginUserPassword[i]))
+                        {
+                            //to call EndUserMenu method ...
+                            EndUserMenu(UserNationalID);
+                            return; //to stop the method ...
+                        }
+                    }
+                    Console.WriteLine("Sorry ... your national id or password is " +
+                                      "not a exist in the system.");
+                    UserCountre++;
+                    isNotLocked = CheckSignInCounter(UserNationalID, UserCountre);
+                    HoldScreen();
+
+
                 }
-                else if (!NationalIDIsUnique(UserNationalID, LoginAdminNationalID) && !PasswordIsUnique(UserPassword, LoginAdminPassword))
+                else if(UserType == 'A' || UserType == 'a')
                 {
-                    //to call AdmainMenu method ...
-                    AdmainMenu(UserNationalID);
-                    return; //to stop the method ...
+                    //to check if the user national id and password is exist in the admin list ...
+                    for(int i = 0; i < LoginAdminNationalID.Count; i++)
+                    {
+                        if (LoginAdminNationalID[i] == UserNationalID &&
+                            VerifyPasswordPBKDF2(UserPassword, LoginAdminPassword[i]))
+                        {
+                            //to call AdmainMenu method ...
+                            AdmainMenu(UserNationalID);
+                            return; //to stop the method ...
+                        }
+                    }
+                    Console.WriteLine("Sorry ... your national id or password is " +
+                                    "not a exist in the system.");
+                    AdminCountre++;
+                    isNotLocked = CheckSignInCounter(UserNationalID, AdminCountre);
+                    HoldScreen();
                 }
                 else
                 {
-                    Console.WriteLine("Sorry ... your national id or password is " +
-                                      "not a exist in the system.");
-                    countre++;
+                    Console.WriteLine("Invalid user type. Please enter 'U' for user or 'A' for admin.");
                     HoldScreen();
-                    //to check if the user enter wrong national id or password 3 times ...
-                    if (countre >= 3)
-                    {
-                        Console.WriteLine("Your account is locked due to multiple failed login attempts.");
-                        //to add the user national id to the LockedAccounts list ...
-                        LockedAccounts.Add(UserNationalID);
-                        isNotLocked = false; //to stop the loop ...
-                        HoldScreen();
-                    }
-                    else
-                    {
-                        isNotLocked = true; //to continue the loop ...
-                    }
+                    continue; //to continue the loop ...
                 }
-            } while(isNotLocked);//to loop until the user enter correct national id and password ...
-            
+            } while(isNotLocked);//to loop until the user enter correct national id and password ... 
         }
         //8.3. WelcomeMessage method ...
         public static void WelcomeMessage()
