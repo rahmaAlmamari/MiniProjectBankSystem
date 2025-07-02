@@ -158,6 +158,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("8. Update Account Information");
                 Console.WriteLine("9. Print All Account Transactions");
                 Console.WriteLine("10. Show Last N Transactions");
+                Console.WriteLine("11. Show Transactions After Date X");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -202,6 +203,10 @@ namespace MiniProjectBankSystem
 
                     case "10": //to call ShowLastNTransactions method ..
                         ShowLastNTransactions();
+                        break;
+
+                    case "11": //to call ShowTransactionsAfterDateX method ..
+                        ShowTransactionsAfterDateX();
                         break;
 
                     case "0"://to exsit EndUserMenu ...
@@ -729,6 +734,50 @@ namespace MiniProjectBankSystem
                                     $"{transactionDate[i]}");
                         Console.WriteLine("--------------------------------------------------");
                         counter++;
+                    }
+
+
+                }
+                HoldScreen();//just to hold second ...}
+
+            }
+        }
+        //5.11. ShowTransactionsAfterDateX method ...
+        public static void ShowTransactionsAfterDateX()
+        {
+            if (transactionAccountNumbers.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                HoldScreen();//just to hold second ...
+                return;
+            }
+            //to get X (Date to display all transction after it) ...
+            DateTime X = DateTimeValidation("date");
+            //to get the user account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("your account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry your account number is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                Console.WriteLine("All Transactions Founded For Your Account Number:");
+                Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
+                for (int i = 0; i < transactionAccountNumbers.Count; i++)
+                {
+                    if (transactionAccountNumbers[i] == AccountNumber.ToString())
+                    {
+                        Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
+                                    $"{transactionType[i]} \t\t" +
+                                    $"{transactionAmount[i]}\t\t" +
+                                    $"{BalanceAfterTransaction[i]} \t\t" +
+                                    $"{transactionDate[i]}");
+                        Console.WriteLine("--------------------------------------------------");
                     }
 
 
@@ -1442,6 +1491,40 @@ namespace MiniProjectBankSystem
             }
             return IsUnique; // No match
         }
+
+        //7.17. DateTimeValidation method ...
+        public static DateTime DateTimeValidation(string message)
+        {
+            bool DateTimeFlag; // to handle user DateTime error input
+            DateTime DateTimeInput = DateTime.Now;
+
+            do
+            {
+                DateTimeFlag = false;
+                try
+                {
+                    Console.WriteLine($"Enter your {message} (format: MM/dd/yyyy):");
+                    DateTimeInput = DateTime.Parse(Console.ReadLine());
+
+                    // Check if the date is in the future or today
+                    if (DateTimeInput.Date > DateTime.Now.Date)
+                    {
+                        Console.WriteLine($"{message} should be a date before today.");
+                        HoldScreen(); // just to hold a second
+                        DateTimeFlag = true; // ask user again
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{message} not accepted due to: " + e.Message);
+                    HoldScreen(); // just to hold a second
+                    DateTimeFlag = true; // ask user again
+                }
+            } while (DateTimeFlag);
+
+            return DateTimeInput; // Return the validated input
+        }
+
 
         //============================ 8. Addtional methods ======================
         //8.1. Sing in method (just to sing in the end users) ...
