@@ -159,6 +159,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("9. Print All Account Transactions");
                 Console.WriteLine("10. Show Last N Transactions");
                 Console.WriteLine("11. Show Transactions After Date X");
+                Console.WriteLine("12. Monthly Statement Generator");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -207,6 +208,10 @@ namespace MiniProjectBankSystem
 
                     case "11": //to call ShowTransactionsAfterDateX method ..
                         ShowTransactionsAfterDateX();
+                        break;
+
+                    case "12": //to call MonthlyStatementGenerator method ..
+                        MonthlyStatementGenerator();
                         break;
 
                     case "0"://to exsit EndUserMenu ...
@@ -821,6 +826,8 @@ namespace MiniProjectBankSystem
             }
             else
             {
+                //to now if transction found or not ...
+                bool NoTransctionFound = true;
                 Console.WriteLine("All Transactions Founded For Your Account Number:");
                 Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
                 for (int i = 0; i < transactionAccountNumbers.Count; i++)
@@ -829,6 +836,7 @@ namespace MiniProjectBankSystem
                     DateTime transctionDate = DateTime.Parse(transactionDate[i]);
                     if (transactionAccountNumbers[i] == AccountNumber.ToString() && transctionDate > FromDate && transctionDate < ToDate)
                     {
+                        NoTransctionFound = false;
                         Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
                                     $"{transactionType[i]} \t\t" +
                                     $"{transactionAmount[i]}\t\t" +
@@ -838,6 +846,10 @@ namespace MiniProjectBankSystem
                     }
 
 
+                }
+                if (NoTransctionFound)
+                {
+                    Console.WriteLine($"Their is no transction found between {FromDate} and {ToDate}");
                 }
                 HoldScreen();//just to hold second ...}
 
