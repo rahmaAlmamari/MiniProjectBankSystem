@@ -75,6 +75,12 @@ namespace MiniProjectBankSystem
         const double USD = 3.8;
         //1.24. EUR value (1EUR = 0.45 OMR)
         const double EUR = 0.45;
+        //1.25. to store active loan in a list ...
+        static List<string> activeLoans = new List<string>();
+        //1.26. to store loan amount in a list ...
+        static List<double> loanAmounts = new List<double>();
+        //1.27. to store RequestLaon in RequestLaon queue ...
+        static Queue<string> RequestLoanQueue = new Queue<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -174,6 +180,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("10. Show Last N Transactions");
                 Console.WriteLine("11. Show Transactions After Date X");
                 Console.WriteLine("12. Monthly Statement Generator");
+                Console.WriteLine("13. Booking Bank Services");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string EndUserMenuOption = StringValidation("option");
@@ -226,6 +233,10 @@ namespace MiniProjectBankSystem
 
                     case "12": //to call MonthlyStatementGenerator method ..
                         MonthlyStatementGenerator();
+                        break;
+
+                    case "13"://to call BookingBankServices method ...
+                        BookingBankServices(nationalId);
                         break;
 
                     case "0"://to exsit EndUserMenu ...
@@ -898,6 +909,33 @@ namespace MiniProjectBankSystem
                 }
                 HoldScreen();//just to hold second ...}
 
+            }
+        }
+        //5.13 BookingBankServices method ...
+        public static void BookingBankServices(string id)
+        {
+            char service;
+            Console.WriteLine("Available Bank Services:");
+            Console.WriteLine("1. Request a Loan");
+            Console.WriteLine("2. Check Loan Status");
+            Console.WriteLine("3. Account Consultation");
+            //to get and validate user input ...
+            service = CharValidation("service (1,2)");
+            switch (service)
+            {
+                case '1': //to call RequestLoan method ...
+                    RequestLoan(id);
+                    break;
+                case '2': //to call CheckLoanStatus method ...
+                    //CheckLoanStatus(id);
+                    break;
+                case '3': //to call AccountConsultation method ...
+                    //AccountConsultation(id);
+                    break;
+                default:
+                    Console.WriteLine("Invalid service choice.");
+                    HoldScreen();//to hold the screen ...
+                    break;
             }
         }
 
@@ -2475,6 +2513,27 @@ namespace MiniProjectBankSystem
                                   Deposite.ToString());
             //to get user rate on service ...
             RateService("deposite");
+        }
+        //8.29. RequestLoan method ...
+        public static void RequestLoan(string id)
+        {
+            //to get account balance using index of nationalID (id) ...
+            int index = nationalID.IndexOf(id);
+            if (balances[index] >= 5000 && activeLoans.Contains(id) == false)
+            {
+                double loanAmount = DoubleValidation("loan amount");
+                string request = $"{id}|{loanAmount}";
+                //to add laon request to the RequestLaon queue ...
+                RequestLoanQueue.Enqueue(request);
+                Console.WriteLine("Your request for a loan submited successfully");
+                HoldScreen();//just to hold a second ...
+            }
+            else
+            {
+                Console.WriteLine("You are not eligible for a loan request." +
+                                  "Your balance should be more than 5000 and you should not have an active loan.");
+                HoldScreen();//just to hold a second ...
+            }
         }
     }
 }
