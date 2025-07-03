@@ -71,6 +71,10 @@ namespace MiniProjectBankSystem
         static List<int> Ratings = new List<int>();
         //1.22. RatingsFilePath to store ratings.txt path
         const string RatingsFilePath = "ratings.txt";
+        //1.23. USD value (1 USD = 3.8 OMR)
+        const double USD = 3.8;
+        //1.24. EUR value (1EUR = 0.45 OMR)
+        const double EUR = 0.45;
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -390,30 +394,31 @@ namespace MiniProjectBankSystem
             }
             else
             {
-                //to do the process of deposite money ...
-                double DepositeMoney = DoubleValidation("money amount to deposite");
-                //get account money amount using check balance ... do it after login ...
-                //to get money amount in the account ... it will be in the balance leater ...
-                double AccountMoney = 0;
-                int index = 0;
-                for(int i = 0; i < accountNumbers.Count; i++)
+                //to get currencies (OMR,USD, EUR) from the user ...
+                char currency;
+                Console.WriteLine("Available currencies:");
+                Console.WriteLine("1. OMR");
+                Console.WriteLine("2. USD");
+                Console.WriteLine("3. EUR");
+                //to call CharValidation to get and validate user input ...
+                currency = CharValidation("currency (1,2,3)");
+                //to deposite money in the account based on the currency selected by the user ...
+                switch(currency)
                 {
-                    if (accountNumbers[i] == AccountNumber)
-                    {
-                        AccountMoney = balances[i];
-                        index = i;
-                        break;//to stop the loop and save the time ...
-                    }
+                    case '1': //to deposite OMR ...
+                        ToGetDepositeMoney(1, AccountNumber, "Deposite (OMR)");
+                        break;
+                    case '2': //to deposite USD ...
+                        ToGetDepositeMoney(USD, AccountNumber, "Deposite (USD)");
+                        break;
+                    case '3': //to deposite EUR ...
+                        ToGetDepositeMoney(EUR, AccountNumber, "Deposite (EUR)");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid currency choice.");
+                        HoldScreen();//to hold the screen ...
+                        break;
                 }
-                double Deposite = AccountMoney + DepositeMoney;
-                balances[index] = Deposite;
-                Console.WriteLine($"Your deposite process done successfully.\n" +
-                                  $"Your new balance is: {Deposite}");
-                //to store the transaction details in the lists ...
-                StoreTransactions(AccountNumber.ToString(), "Deposite", Deposite.ToString(),
-                                      Deposite.ToString());
-                //to get user rate on service ...
-                RateService("deposite");
             }
         }
         //5.3. Withdraw money ...
@@ -466,7 +471,7 @@ namespace MiniProjectBankSystem
                     RateService("withdraw");
                 }
             }
-        }//to take money from your account ...
+        }//to take money from your account ... 
         //5.4. Check balance ...
         public static void CheckBalance()
         {
@@ -2443,6 +2448,33 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
-
+        //8.28. ToGetDepositeMoney method ...
+        public static void ToGetDepositeMoney(double CurrencyValue, int AccountNumber, string type)
+        {
+            //to do the process of deposite money ...
+            double DepositeMoney = DoubleValidation("money amount to deposite");
+            //get account money amount using check balance ... do it after login ...
+            //to get money amount in the account ... it will be in the balance leater ...
+            double AccountMoney = 0;
+            int index = 0;
+            for (int i = 0; i < accountNumbers.Count; i++)
+            {
+                if (accountNumbers[i] == AccountNumber)
+                {
+                    AccountMoney = balances[i];
+                    index = i;
+                    break;//to stop the loop and save the time ...
+                }
+            }
+            double Deposite = AccountMoney + (DepositeMoney * CurrencyValue);
+            balances[index] = Deposite;
+            Console.WriteLine($"Your deposite process done successfully.\n" +
+                              $"Your new balance is: {Deposite}");
+            //to store the transaction details in the lists ...
+            StoreTransactions(AccountNumber.ToString(), type, (DepositeMoney * CurrencyValue).ToString(),
+                                  Deposite.ToString());
+            //to get user rate on service ...
+            RateService("deposite");
+        }
     }
 }
