@@ -257,6 +257,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("10. Export All Account Info to a New File");
                 Console.WriteLine("11. Unlock Locked Accounts");
                 Console.WriteLine("12. Print All Transactions");
+                Console.WriteLine("13. View Average Feedback Score");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string AdmainMenuRunOption = StringValidation("option");
@@ -309,6 +310,10 @@ namespace MiniProjectBankSystem
 
                     case "12"://to call PrintAllTransactions method ...
                         PrintAllTransactions();
+                        break;
+
+                    case "13"://to call ViewAverageFeedbackScore method ...
+                        ViewAverageFeedbackScore();
                         break;
 
                     case "0"://to exsit AdmainMenuRun ...
