@@ -770,6 +770,54 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
                 for (int i = 0; i < transactionAccountNumbers.Count; i++)
                 {
+                    //to convert transactionDate[i] from string to DateTime dataType ...
+                    DateTime transctionDate = DateTime.Parse(transactionDate[i]);
+                    if (transactionAccountNumbers[i] == AccountNumber.ToString() && transctionDate > X)
+                    {
+                        Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
+                                    $"{transactionType[i]} \t\t" +
+                                    $"{transactionAmount[i]}\t\t" +
+                                    $"{BalanceAfterTransaction[i]} \t\t" +
+                                    $"{transactionDate[i]}");
+                        Console.WriteLine("--------------------------------------------------");
+                    }
+
+
+                }
+                HoldScreen();//just to hold second ...}
+
+            }
+        }
+        //5.12. MonthlyStatementGenerator method ...
+        public static void MonthlyStatementGenerator()
+        {
+            if (transactionAccountNumbers.Count == 0)
+            {
+                Console.WriteLine("No transactions found.");
+                HoldScreen();//just to hold second ...
+                return;
+            }
+            //to get FromDate (Date to display all transction after it) ...
+            DateTime FromDate = DateTimeValidation("from date");
+            //to get ToDate (Date to display all transction before it) ...
+            DateTime ToDate = DateTimeValidation("to date");
+            //to get the user account number from the user ...
+            int AccountNumber;
+            AccountNumber = IntValidation("your account number");
+            //to check if the account exist ...
+            bool IsExist = CheckAccountNumberExist(AccountNumber);
+            if (!IsExist)
+            {
+                Console.WriteLine("Sorry your account number is not exist!");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            else
+            {
+                Console.WriteLine("All Transactions Founded For Your Account Number:");
+                Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
+                for (int i = 0; i < transactionAccountNumbers.Count; i++)
+                {
                     if (transactionAccountNumbers[i] == AccountNumber.ToString())
                     {
                         Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
@@ -786,7 +834,6 @@ namespace MiniProjectBankSystem
 
             }
         }
-
         //============================ 6. Admain use case =======================
         //6.1. Process requests ...
         public static void ViewRequests()
@@ -1509,7 +1556,7 @@ namespace MiniProjectBankSystem
                     // Check if the date is in the future or today
                     if (DateTimeInput.Date > DateTime.Now.Date)
                     {
-                        Console.WriteLine($"{message} should be a date before today.");
+                        Console.WriteLine($"{message} should be a date valid.");
                         HoldScreen(); // just to hold a second
                         DateTimeFlag = true; // ask user again
                     }
