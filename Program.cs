@@ -94,6 +94,8 @@ namespace MiniProjectBankSystem
             LoadLockedAccounts();
             //to load the transaction details from the file and store it into the lists ...
             LoadTransactionsFromFile();
+            //to load the ratings from the file and store it into the Ratings list ...
+            LoadRatingsFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -132,6 +134,8 @@ namespace MiniProjectBankSystem
                         SaveLockedAccounts();
                         //to save transaction details to the file ...
                         SaveTransactionsToFile();
+                        //to save ratings to the file ...
+                        SaveRatingsToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -2354,6 +2358,64 @@ namespace MiniProjectBankSystem
             //to store the rating in the Ratings list ...
             Ratings.Add(rating);
             HoldScreen();//just to hold second ...
+        }
+        //8.26. SaveRatingsToFile method ...
+        public static void SaveRatingsToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(RatingsFilePath))
+                {
+                    foreach (int rating in Ratings)
+                    {
+                        string ratingString = rating.ToString();
+                        writer.WriteLine(ratingString);
+                    }
+                }
+                Console.WriteLine("Ratings saved successfully.");
+                HoldScreen();//just to hold second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving ratings.");
+                HoldScreen();//just to hold second ...
+            }
+        }
+        //8.27. LoadRatingsFromFile method ...
+        public static void LoadRatingsFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(RatingsFilePath))
+                {
+                    Console.WriteLine("Sorry ... no saved data found in ratings.txt file.");
+                    HoldScreen();//to hold a second ...
+                    return;//to stop the method ...
+                }
+                //to make sure that Ratings list is clear ...
+                Ratings.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(RatingsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        //to add the information to the list ...
+                        Ratings.Add(int.Parse(line));
+                    }
+                }
+                Console.WriteLine("Ratings loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading ratings file.");
+                HoldScreen();
+            }
         }
 
     }
