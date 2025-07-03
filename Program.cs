@@ -81,6 +81,8 @@ namespace MiniProjectBankSystem
         static List<double> loanAmounts = new List<double>();
         //1.27. to store RequestLaon in RequestLaon queue ...
         static Queue<string> RequestLoanQueue = new Queue<string>();
+        //2.28. RequestLaonFilePath to store RequestLoan.txt path
+        const string RequestLoanFilePath = "RequestLoan.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -106,6 +108,8 @@ namespace MiniProjectBankSystem
             LoadTransactionsFromFile();
             //to load the ratings from the file and store it into the Ratings list ...
             LoadRatingsFromFile();
+            //to load the RequestLoan from the file and store it into the RequestLoanQueue ...
+            LoadRequestLoanFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -146,6 +150,8 @@ namespace MiniProjectBankSystem
                         SaveTransactionsToFile();
                         //to save ratings to the file ...
                         SaveRatingsToFile();
+                        //to save RequestLoan to the file ...
+                        SaveRequestLoanToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -2533,6 +2539,56 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("You are not eligible for a loan request." +
                                   "Your balance should be more than 5000 and you should not have an active loan.");
                 HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.30. SaveRequestLoanToFile method ...
+        public static void SaveRequestLoanToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(RequestLoanFilePath))
+                {
+                    foreach (var request in RequestLoanQueue)
+                    {
+                        writer.WriteLine(request);
+                    }
+                }
+                Console.WriteLine("Request loan saved successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving request loan.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.31. LoadRequestLoanFromFile method ...
+        public static void LoadRequestLoanFromFile()
+        {
+            try
+            {
+                if (!File.Exists(RequestLoanFilePath)) return;
+                using (StreamReader reader = new StreamReader(RequestLoanFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // Skip empty lines
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        RequestLoanQueue.Enqueue(line);
+                    }
+                }
+                Console.WriteLine("Requests loans loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading requests loans.");
+                HoldScreen();
             }
         }
     }
