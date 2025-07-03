@@ -766,6 +766,8 @@ namespace MiniProjectBankSystem
             }
             else
             {
+                //to now if transction found or not ...
+                bool NoTransctionFound = true;
                 Console.WriteLine("All Transactions Founded For Your Account Number:");
                 Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
                 for (int i = 0; i < transactionAccountNumbers.Count; i++)
@@ -774,6 +776,7 @@ namespace MiniProjectBankSystem
                     DateTime transctionDate = DateTime.Parse(transactionDate[i]);
                     if (transactionAccountNumbers[i] == AccountNumber.ToString() && transctionDate > X)
                     {
+                        NoTransctionFound = false;
                         Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
                                     $"{transactionType[i]} \t\t" +
                                     $"{transactionAmount[i]}\t\t" +
@@ -783,6 +786,10 @@ namespace MiniProjectBankSystem
                     }
 
 
+                }
+                if (NoTransctionFound) 
+                {
+                    Console.WriteLine("Their is no transction found after" + X);
                 }
                 HoldScreen();//just to hold second ...}
 
@@ -1555,13 +1562,13 @@ namespace MiniProjectBankSystem
                     Console.WriteLine($"Enter your {message} (format: MM/dd/yyyy):");
                     DateTimeInput = DateTime.Parse(Console.ReadLine());
 
-                    // Check if the date is in the future or today
-                    if (DateTimeInput.Date > DateTime.Now.Date)
-                    {
-                        Console.WriteLine($"{message} should be a date valid.");
-                        HoldScreen(); // just to hold a second
-                        DateTimeFlag = true; // ask user again
-                    }
+                    //// Check if the date is in the future or today
+                    //if (DateTimeInput.Date > DateTime.Now.Date)
+                    //{
+                    //    Console.WriteLine($"{message} should be a date valid.");
+                    //    HoldScreen(); // just to hold a second
+                    //    DateTimeFlag = true; // ask user again
+                    //}
                 }
                 catch (Exception e)
                 {
