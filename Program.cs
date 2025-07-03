@@ -818,7 +818,9 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
                 for (int i = 0; i < transactionAccountNumbers.Count; i++)
                 {
-                    if (transactionAccountNumbers[i] == AccountNumber.ToString())
+                    //to convert transactionDate[i] from string to DateTime dataType ...
+                    DateTime transctionDate = DateTime.Parse(transactionDate[i]);
+                    if (transactionAccountNumbers[i] == AccountNumber.ToString() && transctionDate > FromDate && transctionDate < ToDate)
                     {
                         Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
                                     $"{transactionType[i]} \t\t" +
