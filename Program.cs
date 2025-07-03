@@ -67,6 +67,10 @@ namespace MiniProjectBankSystem
         const string TransactionFilePath = "transactions.txt";
         //1.20. Statement list to store monthly statement data (parallel)
         static List<string> statement = new List<string>();
+        //1.21. to store ratings in Ratings list ...
+        static List<int> Ratings = new List<int>();
+        //1.22. RatingsFilePath to store ratings.txt path
+        const string RatingsFilePath = "ratings.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -399,13 +403,8 @@ namespace MiniProjectBankSystem
                 //to store the transaction details in the lists ...
                 StoreTransactions(AccountNumber.ToString(), "Deposite", Deposite.ToString(),
                                       Deposite.ToString());
-                //transactionAccountNumbers.Add(AccountNumber.ToString());
-                //transactionType.Add("Deposite");
-                //transactionAmount.Add(DepositeMoney.ToString());
-                //BalanceAfterTransaction.Add(Deposite.ToString());
-                //transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
-                //Console.WriteLine("Transaction details saved successfully.");
-                //HoldScreen();//just to hold the screen ...
+                //to get user rate on service ...
+                RateService("deposite");
             }
         }
         //5.3. Withdraw money ...
@@ -454,6 +453,8 @@ namespace MiniProjectBankSystem
                     //to store the transaction details in the lists ...
                     StoreTransactions(AccountNumber.ToString(), "Withdraw", WithdrawMoney.ToString(),
                                       Withdraw.ToString());
+                    //to get user rate on service ...
+                    RateService("withdraw");
                 }
             }
         }//to take money from your account ...
@@ -560,7 +561,8 @@ namespace MiniProjectBankSystem
                                           Transfer.ToString());
                     StoreTransactions(ToAccountNumber.ToString(), "TransferFrom", TransferMoney.ToString(),
                                           balances[ToAccountNumberIndex].ToString());
-                    //HoldScreen();//just to hold the screen ...
+                    //to get user rate on service ...
+                    RateService("transfer between accounts");
                 }
             }
         }
@@ -884,7 +886,6 @@ namespace MiniProjectBankSystem
 
             }
         }
-        
 
         //============================ 6. Admain use case =======================
         //6.1. Process requests ...
@@ -2344,7 +2345,16 @@ namespace MiniProjectBankSystem
             Console.WriteLine("Transaction details saved successfully.");
             HoldScreen();//just to hold second ...
         }
-
+        //8.25. To rate the Service method
+        public static void RateService(string ServiceName)
+        {
+            Console.WriteLine($"Please rate our {ServiceName} service from 1 to 5:");
+            //to get the rate from the user ...
+            int rating = IntValidation("rating (1 to 5)");
+            //to store the rating in the Ratings list ...
+            Ratings.Add(rating);
+            HoldScreen();//just to hold second ...
+        }
 
     }
 }
