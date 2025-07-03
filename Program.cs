@@ -65,6 +65,8 @@ namespace MiniProjectBankSystem
         static List<string> transactionDate = new List<string>();
         //1.19. TransactionFilePath to store transactions.txt path
         const string TransactionFilePath = "transactions.txt";
+        //1.20. Statement list to store monthly statement data (parallel)
+        static List<string> statement = new List<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -452,13 +454,6 @@ namespace MiniProjectBankSystem
                     //to store the transaction details in the lists ...
                     StoreTransactions(AccountNumber.ToString(), "Withdraw", WithdrawMoney.ToString(),
                                       Withdraw.ToString());
-                    //transactionAccountNumbers.Add(AccountNumber.ToString());
-                    //transactionType.Add("Withdraw");
-                    //transactionAmount.Add(WithdrawMoney.ToString());
-                    //BalanceAfterTransaction.Add(Withdraw.ToString());
-                    //transactionDate.Add(DateTime.Now.ToString());//to store the current date and time of the transaction ...
-                    //Console.WriteLine("Transaction details saved successfully.");
-                    //HoldScreen();//just to hold the screen ...
                 }
             }
         }//to take money from your account ...
@@ -826,6 +821,10 @@ namespace MiniProjectBankSystem
             }
             else
             {
+                //to make sure Statement list is clear ...
+                statement.Clear();
+                //to store founded transactions in the statement list ...
+                string dateLine = "null";
                 //to now if transction found or not ...
                 bool NoTransctionFound = true;
                 Console.WriteLine("All Transactions Founded For Your Account Number:");
@@ -843,18 +842,50 @@ namespace MiniProjectBankSystem
                                     $"{BalanceAfterTransaction[i]} \t\t" +
                                     $"{transactionDate[i]}");
                         Console.WriteLine("--------------------------------------------------");
+                        //to combine the transaction details in dateLine variable ...
+                        dateLine = $"{transactionAccountNumbers[i]},{transactionType[i]},{transactionAmount[i]}," +
+                                    $"{BalanceAfterTransaction[i]},{transactionDate[i]}";
                     }
-
-
+                    //to save transaction details stored in dateLine one by one in the statement list ...
+                    statement.Add(dateLine);
                 }
                 if (NoTransctionFound)
                 {
                     Console.WriteLine($"Their is no transction found between {FromDate} and {ToDate}");
                 }
+                else 
+                {
+                    //to save the statement to a file ...
+                    try
+                    {
+                        //we do not check if the file exist or not becouse 
+                        //StreamWriter will create the file in the same path we put 
+                        //if he do not found it 
+
+                        //to create bath name ...
+                        string fileName = $"Statement_{AccountNumber}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
+                        using (StreamWriter writer = new StreamWriter(fileName))
+                        {
+                            for (int i = 0; i < statement.Count; i++)
+                            {
+                                writer.WriteLine(statement[i]);
+                            }
+                        }
+                        Console.WriteLine("Monthly Statement Generated Successfully.");
+                        HoldScreen();//just to hold second ...
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Error in generating monthy statement into the file." );
+                        HoldScreen();//just to hold second ...
+                    }
+                }
                 HoldScreen();//just to hold second ...}
 
             }
         }
+        
+
         //============================ 6. Admain use case =======================
         //6.1. Process requests ...
         public static void ViewRequests()
