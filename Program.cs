@@ -1240,6 +1240,27 @@ namespace MiniProjectBankSystem
             }
             HoldScreen();//just to hold second ...
         }
+        //6.13. ViewAverageFeedbackScore method ...
+        public static void ViewAverageFeedbackScore()
+        {
+            //to check if there is review submited or not ...
+            if (Ratings.Count == 0)
+            {
+                Console.WriteLine("There is no rating submited yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method ...
+            }
+            //to calculate the average feedback score ...
+            double totalScore = 0;
+            int count = Ratings.Count;
+            for(int i = 0; i < count; i++)
+            {
+                totalScore += Ratings[i];
+            }
+            double averageScore = totalScore / count;
+            Console.WriteLine($"Average Feedback Score: {averageScore}");
+            HoldScreen();//to hold the screen ...
+        }
 
         //============================ 7. Validation =============================
         //7.1. CharValidation method ...
