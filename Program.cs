@@ -79,10 +79,14 @@ namespace MiniProjectBankSystem
         static List<string> activeLoans = new List<string>();
         //1.26. to store loan amount in a list ...
         static List<double> loanAmounts = new List<double>();
-        //1.27. to store RequestLaon in RequestLaon queue ...
+        //1.27. to store loan interest in a list ...
+        static List<double> loanInterest = new List<double>();
+        //1.28. to store RequestLaon in RequestLaon queue ...
         static Queue<string> RequestLoanQueue = new Queue<string>();
-        //2.28. RequestLaonFilePath to store RequestLoan.txt path
+        //2.29. RequestLaonFilePath to store RequestLoan.txt path
         const string RequestLoanFilePath = "RequestLoan.txt";
+        //2.30. ActiveLoansFilePath to store ActiveLoans.txt path
+        const string ActiveLoansFilePath = "ActiveLoans.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -279,6 +283,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("11. Unlock Locked Accounts");
                 Console.WriteLine("12. Print All Transactions");
                 Console.WriteLine("13. View Average Feedback Score");
+                Console.WriteLine("14. Approve reguests for loan");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string AdmainMenuRunOption = StringValidation("option");
@@ -335,6 +340,10 @@ namespace MiniProjectBankSystem
 
                     case "13"://to call ViewAverageFeedbackScore method ...
                         ViewAverageFeedbackScore();
+                        break;
+
+                    case "14"://to call ApproveReguestsForLoan method ...
+                        ApproveReguestsForLoan();
                         break;
 
                     case "0"://to exsit AdmainMenuRun ...
@@ -1314,6 +1323,45 @@ namespace MiniProjectBankSystem
             double averageScore = totalScore / count;
             Console.WriteLine($"Average Feedback Score: {averageScore}");
             HoldScreen();//to hold the screen ...
+        }
+        //6.14. ApproveReguestsForLoan method ...
+        public static void ApproveReguestsForLoan()
+        {
+            //to check if there are request or not ...
+            if (RequestLoanQueue.Count == 0)
+            {
+                Console.WriteLine("There is no request submited yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method ...
+            }
+            //to get first request submited to RequestLoanQueue queue ...
+            string request = RequestLoanQueue.Dequeue();
+            string[] RequestDteials = request.Split('|').ToArray();
+            //to get user index using nationalID ...
+            int userIndex = nationalID.IndexOf(RequestDteials[0]);
+            //to display the first request in the queue ...
+            Console.WriteLine("The first request in queue:");
+            Console.WriteLine($"User Name: {accountUserNames[userIndex]}\n" +
+                              $"User National ID: {RequestDteials[0]}\n" +
+                              $"Initial Balance: {balances[userIndex]}\n" +
+                              $"User Phone Number: {accountPhoneNumbers[userIndex]}\n" +
+                              $"User Address:{accountAddresses[userIndex]}\n" +
+                              $"User Loan Amount:{RequestDteials[0]}");
+            bool action = ConfirmAction("approved this loan request");
+            if (action)
+            {
+                //to set interest rate ...
+                double interestRate = DoubleValidation("interest rate");
+
+                //to store loan details in the lists ...
+                activeLoans.Add(RequestDteials[0]);
+                loanInterest.Add(interestRate);
+                loanAmounts.Add(Convert.ToDouble(RequestDteials[1]));//to convert RequestDteials from string to double ...
+
+                Console.WriteLine($"Loan created successfully for: {RequestDteials[0]}\n");
+                HoldScreen();//to hold the screen ...
+
+            }
         }
 
         //============================ 7. Validation =============================
@@ -2591,5 +2639,68 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
+        //8.32. SaveActiveLoansToFile method ...
+        public static void SaveActiveLoansToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(ActiveLoansFilePath))
+                {
+                    for (int i = 0; i < activeLoans.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{activeLoans[i]}," +
+                                          $"{loanAmounts[i].ToString()}," +
+                                          $"{loanInterest[i].ToString()},";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine("Active loans saved successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving active loans.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.33. LoadActiveLoansFromFile method ...
+        public static void LoadActiveLoansFromFile() 
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(ActiveLoansFilePath)) return;
+                //to make sure that activeLoans list is clear ...
+                activeLoans.Clear();
+                //to make sure that loanAmounts list is clear ...
+                loanAmounts.Clear();
+                //to make sure that loanInterest list is clear ...
+                loanInterest.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(ActiveLoansFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        //to add the information to the list ...
+                        activeLoans.Add(line);
+                    }
+                }
+                Console.WriteLine("Active loans loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading active loans file.");
+                HoldScreen();
+            }
+        }
+
     }
 }
