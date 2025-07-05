@@ -178,6 +178,9 @@ namespace MiniProjectBankSystem
                         SaveRequestConsultationToFile();
                         //to save active consultation to the file ...
                         SaveActiveConsultationToFile();
+                        //to generate backup file for the system ...
+                        GenerateDataBackupForTheSystem();
+                        //to display exit message ...
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -2924,6 +2927,85 @@ namespace MiniProjectBankSystem
             {
                 Console.WriteLine("Error loading active consultations file.");
                 HoldScreen();
+            }
+        }
+        //8.39. GenerateDataBackupForTheSystem method ...
+        public static void GenerateDataBackupForTheSystem()
+        {
+            try
+            {
+                //to get a rundon number to create a unique backup file name ...
+                Random random = new Random();
+                //to create a backup file ...
+                string backupFileName = $"Backup_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}_{random.Next(1000, 9999)}.txt";
+                using (StreamWriter writer = new StreamWriter(backupFileName))
+                {
+                    //to write all data to the backup file ...
+                    writer.WriteLine("All Account Informaton:");
+                    for (int i = 0; i < accountNumbers.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{accountNumbers[i]},{accountUserNames[i]}," +
+                                          $"{nationalID[i]},{balances[i]}," +
+                                          $"{accountPhoneNumbers[i]},{accountAddresses[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("All Transactions:");
+                    for (int i = 0; i < transactionAccountNumbers.Count; i++)
+                    {
+                        //to compaine all the end transcation data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in TransactionFilePath
+                        string dataLine = $"{transactionAccountNumbers[i]},{transactionType[i]}," +
+                                          $"{transactionAmount[i]},{BalanceAfterTransaction[i]}," +
+                                          $"{transactionDate[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("All Reviews:");
+                    foreach (var review in reviewsStack)
+                    {
+                        writer.WriteLine(review);
+                    }
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("All Ratings:");
+                    foreach (var rating in Ratings)
+                    {
+                        writer.WriteLine(rating);
+                    }
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("All Active Loans:");
+                    for (int i = 0; i < activeLoans.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{activeLoans[i]}," +
+                                          $"{loanAmounts[i].ToString()}," +
+                                          $"{loanInterest[i].ToString()},";
+                        writer.WriteLine(dataLine);
+                    }
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("All Active Consultations:");
+                    for (int i = 0; i < ActiveConsultation.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{ActiveConsultation[i]},{ConsultationDate[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine($"Data backup created successfully: {backupFileName}");
+                HoldScreen();//just to hold a second ...
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error creating data backup: " + e.Message);
+                HoldScreen();//just to hold a second ...
             }
         }
 
