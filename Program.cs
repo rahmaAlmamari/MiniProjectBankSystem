@@ -87,6 +87,10 @@ namespace MiniProjectBankSystem
         const string RequestLoanFilePath = "RequestLoan.txt";
         //2.30. ActiveLoansFilePath to store ActiveLoans.txt path
         const string ActiveLoansFilePath = "ActiveLoans.txt";
+        //2.31. to store ActiveConsultation to list ...
+        static List<string> ActiveConsultation = new List<string>();
+        //2.32. to store RequestActiveConsultation to queue ...
+        static Queue<string> RequestActiveConsultation = new Queue<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -939,7 +943,7 @@ namespace MiniProjectBankSystem
             Console.WriteLine("2. Check Loan Status");
             Console.WriteLine("3. Account Consultation");
             //to get and validate user input ...
-            service = CharValidation("service (1,2)");
+            service = CharValidation("service (1,2,3)");
             switch (service)
             {
                 case '1': //to call RequestLoan method ...
@@ -949,7 +953,7 @@ namespace MiniProjectBankSystem
                     //CheckLoanStatus(id);
                     break;
                 case '3': //to call AccountConsultation method ...
-                    //AccountConsultation(id);
+                    AccountConsultation(id);
                     break;
                 default:
                     Console.WriteLine("Invalid service choice.");
@@ -2714,6 +2718,37 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Error loading active loans file.");
                 HoldScreen();
             }
+        }
+        //8.34. AccountConsultation method ...
+        public static void AccountConsultation(string id)
+        {
+            //to check if user has an active consultation or not ...
+            if (ActiveConsultation.Contains(id))
+            {
+                Console.WriteLine("You already have an active consultation.");
+                HoldScreen();//just to hold a second ...
+                return; //to stop the method ...
+            }
+            bool DateTimeFlag = true;
+            DateTime consultationDate;
+            do
+            {
+                //to get the date for the consultation from the user ...
+                consultationDate = DateTimeValidation("consultation date");
+                // Check if the date is in the future or today
+                if (consultationDate.Date > DateTime.Now.Date)
+                {
+                    Console.WriteLine($"consultation date should be a date valid.");
+                    HoldScreen(); // just to hold a second
+                    DateTimeFlag = true; // ask user again
+                }
+            } while (DateTimeFlag);
+            //to add the user national id to the RequestActiveConsultation qeue ...
+            string request = $"{id}|{consultationDate.ToString("yyyy-MM-dd HH:mm:ss")}";
+            RequestActiveConsultation.Enqueue(request);
+            Console.WriteLine("Your request for a consultation has been submitted successfully.");
+            HoldScreen();//just to hold a second ...
+
         }
 
     }
