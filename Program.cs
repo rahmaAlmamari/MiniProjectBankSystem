@@ -1707,22 +1707,30 @@ namespace MiniProjectBankSystem
         public static string HashPasswordPBKDF2(string password)
         {
             using (var rng = new RNGCryptoServiceProvider())
+            // RNGCryptoServiceProvider -> is used to generate a cryptographically strong random number.
             {
-                byte[] salt = new byte[16];
+                byte[] salt = new byte[16];//to get a random value that makes each hash unique.
+                // GetBytes -> fills the specified array with a cryptographically strong random sequence of values.
                 rng.GetBytes(salt);
 
-                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
-                byte[] hash = pbkdf2.GetBytes(20);
+                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);//to creates a secure hash using the PBKDF2 algorithm.
+                byte[] hash = pbkdf2.GetBytes(20);//to gets the first 20 bytes (160 bits) of the hash.
 
-                byte[] hashBytes = new byte[36];
+                byte[] hashBytes = new byte[36];//to creates a final array to store salt + hash.
                 Array.Copy(salt, 0, hashBytes, 0, 16);
                 Array.Copy(hash, 0, hashBytes, 16, 20);
+                //to Copies salt (first 16 bytes) and hash (next 20 bytes) into one array.
 
                 return Convert.ToBase64String(hashBytes);
+                //to converts the whole 36-byte array to a Base64 string so
+                //it can be stored in a database or file easily.
             }
         }
         //HashPasswordPBKDF2 -> this method hashes the user’s password securely using the
         //PBKDF2 algorithm with a random salt, and returns the result as a Base64 string.
+
+        //what is salt -> a random value added to a password before hashing it.
+        //It’s used to make each password hash unique, even if two users have the same password.
 
         //7.13. Verify password by comparing hashes
         public static bool VerifyPasswordPBKDF2(string password, string savedHash)
