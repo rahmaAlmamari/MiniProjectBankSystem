@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Collections;
 using System.Collections.Generic;//to deal with list, stack and queue ...
 using System.IO;//to import Input output backage to deal with files ...
+//20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace MiniProjectBankSystem
 {
     internal class Program
     {
+        //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
         //============================== 1. Globle varaibles ===================
         //1.1. MinimumBalance Constant ...
         const double MinimumBalance = 100.0;
@@ -643,6 +645,7 @@ namespace MiniProjectBankSystem
             if (reviewsStack.Count == 0)
             {
                 Console.WriteLine("There is no review submited yet");
+                //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
                 HoldScreen();//to hold the screen ...
                 return;//to stop the method ...
             }
@@ -1076,7 +1079,8 @@ namespace MiniProjectBankSystem
             {
                 Console.WriteLine("There is no review submited yet");
                 HoldScreen();//to hold the screen ...
-                return;//to stop the method .
+                return;//to stop the method ...
+                //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
             }
             //to display all the review submited to the reviewsStack ...
             foreach (string review in reviewsStack)
@@ -1567,6 +1571,7 @@ namespace MiniProjectBankSystem
             //to return tne char input ...
             return IntInput;
         }
+        //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
         //7.6. Check if balance == MinimumBalance ...
         public static bool CheckBalanceEqualsMinimumBalance(double value)
         {
@@ -1587,6 +1592,7 @@ namespace MiniProjectBankSystem
         //7.7. Check if the account number exist or not ...
         public static bool CheckAccountNumberExist(int accountNum)
         {
+            //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
             bool result = false;
             for (int i = 0; i < accountNumbers.Count; i++)
             {
@@ -1782,7 +1788,7 @@ namespace MiniProjectBankSystem
             //to return tne char input ...
             return PhoneInput;
         }
-
+        //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
         //7.16. To check if user phone number is unique or not ...
         public static bool PhoneNumberIsUnique(string phone, List<string> list)
         {
@@ -2366,6 +2372,7 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
         }
+        //20 8 9 19 3 15 4 5 13 1 4 5 2 25 18 1 8 13 1 1 12 13 1 13 1 18 9
         //8.18. LoadLoginUserFromFile method ...
         public static void LoadLoginUserFromFile()
         {
