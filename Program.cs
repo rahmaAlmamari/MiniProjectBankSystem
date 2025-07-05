@@ -2886,5 +2886,39 @@ namespace MiniProjectBankSystem
                 HoldScreen();//just to hold a second ...
             }
         }
+        //8.38. LoadActiveConsultationFromFile method ...
+        public static void LoadActiveConsultationFromFile()
+        {
+            try
+            {
+                //to check if the file is exist or not ...
+                if (!File.Exists(ActiveConsultationFilePath)) return;
+                //to make sure that ActiveConsultation list is clear ...
+                ActiveConsultation.Clear();
+                //to make sure that ConsultationDate list is clear ...
+                ConsultationDate.Clear();
+                //loading process start here
+                using (StreamReader reader = new StreamReader(ActiveConsultationFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        //to add the information to the list ...
+                        string[] parts = line.Split(',');
+                        ActiveConsultation.Add(parts[0]);
+                        ConsultationDate.Add(parts[1]);
+                    }
+                }
+                Console.WriteLine("Active consultations loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading active consultations file.");
+                HoldScreen();
+            }
+        }
+
+
     }
 }
