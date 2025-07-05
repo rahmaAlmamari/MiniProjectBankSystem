@@ -179,7 +179,7 @@ namespace MiniProjectBankSystem
                         HoldScreen();//to hold the screen ...
                         break;
                 }
-                
+
             }
 
         }
@@ -413,7 +413,7 @@ namespace MiniProjectBankSystem
             createAccountRequests.Enqueue(request);
             int num = createAccountRequests.Count();
             Console.WriteLine("Your request submited successfully");
-            Console.WriteLine("Their is "+ num +" request");
+            Console.WriteLine("Their is " + num + " request");
             HoldScreen();//to hold the screen ...
 
 
@@ -443,7 +443,7 @@ namespace MiniProjectBankSystem
                 //to call CharValidation to get and validate user input ...
                 currency = CharValidation("currency (1,2,3)");
                 //to deposite money in the account based on the currency selected by the user ...
-                switch(currency)
+                switch (currency)
                 {
                     case '1': //to deposite OMR ...
                         ToGetDepositeMoney(1, AccountNumber, "Deposite (OMR)");
@@ -527,10 +527,10 @@ namespace MiniProjectBankSystem
                 return; //to stop the method ...
             }
             else
-            { 
-                for(int i = 0; i < accountNumbers.Count; i++)
+            {
+                for (int i = 0; i < accountNumbers.Count; i++)
                 {
-                    if(AccountNumber == accountNumbers[i])
+                    if (AccountNumber == accountNumbers[i])
                     {
                         Console.WriteLine($"Your account balance is: {balances[i]}");
                         HoldScreen();
@@ -538,7 +538,7 @@ namespace MiniProjectBankSystem
                     }
                 }
             }
-            }//to know how much in your account ...
+        }//to know how much in your account ...
         //5.5. Submit review ...
         public static void SubmitReview(string id)
         {
@@ -607,7 +607,7 @@ namespace MiniProjectBankSystem
                     //to get the ToAccountNumber index ...
                     int ToAccountNumberIndex = Array.IndexOf(accountNumbers.ToArray(), ToAccountNumber);
                     //to add the TransferMoney to the ToAccountNumber index ...
-                    balances[ToAccountNumberIndex] += TransferMoney;   
+                    balances[ToAccountNumberIndex] += TransferMoney;
                     Console.WriteLine($"Your transfer process done successfully.\n" +
                                       $"Your new balance is: {Transfer}");
                     //to store the transaction details in the lists ...
@@ -665,7 +665,7 @@ namespace MiniProjectBankSystem
                         HoldScreen();//to hold the screen ...
                         return;//to stop the method ...
                     }
-                 
+
                 }
             }
         }
@@ -779,7 +779,7 @@ namespace MiniProjectBankSystem
             {
                 Console.WriteLine("All Transactions Founded For Your Account Number:");
                 Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
-                for (int i = transactionAccountNumbers.Count -1; i >= 0 ; i--)
+                for (int i = transactionAccountNumbers.Count - 1; i >= 0; i--)
                 {
                     if (transactionAccountNumbers[i] == AccountNumber.ToString() && counter < N)
                     {
@@ -843,7 +843,7 @@ namespace MiniProjectBankSystem
 
 
                 }
-                if (NoTransctionFound) 
+                if (NoTransctionFound)
                 {
                     Console.WriteLine("Their is no transction found after" + X);
                 }
@@ -909,7 +909,7 @@ namespace MiniProjectBankSystem
                 {
                     Console.WriteLine($"Their is no transction found between {FromDate} and {ToDate}");
                 }
-                else 
+                else
                 {
                     //to save the statement to a file ...
                     try
@@ -932,7 +932,7 @@ namespace MiniProjectBankSystem
                     }
                     catch
                     {
-                        Console.WriteLine("Error in generating monthy statement into the file." );
+                        Console.WriteLine("Error in generating monthy statement into the file.");
                         HoldScreen();//just to hold second ...
                     }
                 }
@@ -991,7 +991,7 @@ namespace MiniProjectBankSystem
         public static void ApproveReguestsAccountsOpening()
         {
             //to check if there are request or not ...
-            if(createAccountRequests.Count == 0)
+            if (createAccountRequests.Count == 0)
             {
                 Console.WriteLine("There is no request submited yet");
                 HoldScreen();//to hold the screen ...
@@ -1006,7 +1006,7 @@ namespace MiniProjectBankSystem
                               $"User National ID: {RequestDteials[1]}\n" +
                               $"Initial Balance: {RequestDteials[2]}\n" +
                               $"User Phone Number: {RequestDteials[3]}\n" +
-                              $"User Address:{RequestDteials[4]}" );
+                              $"User Address:{RequestDteials[4]}");
             bool action = ConfirmAction("approved this request");
             if (action)
             {
@@ -1032,7 +1032,7 @@ namespace MiniProjectBankSystem
         public static void ViewOpingingAccounts()
         {
             //to check if there is opened accounts or not ...
-            if(accountNumbers.Count == 0)
+            if (accountNumbers.Count == 0)
             {
                 Console.WriteLine("There is no opened accounts yet");
                 HoldScreen();//to hold the screen ...
@@ -1041,7 +1041,7 @@ namespace MiniProjectBankSystem
             //to display all opened accounts ...
             Console.WriteLine("Accounts information:");
             Console.WriteLine("Account No \t|\t User Name \t|\t National ID \t|\t Balance");
-            for(int i = 0; i < accountNumbers.Count; i++)
+            for (int i = 0; i < accountNumbers.Count; i++)
             {
                 Console.WriteLine($"{accountNumbers[i]} \t|\t {accountUserNames[i]} " +
                                   $"\t|\t {nationalID[i]} \t|\t {balances[i]}");
@@ -1051,15 +1051,15 @@ namespace MiniProjectBankSystem
         //6.4. View all review ...
         public static void ViewAllReview()
         {
-           //to check if there is review submited or not ...
-           if(reviewsStack.Count == 0)
+            //to check if there is review submited or not ...
+            if (reviewsStack.Count == 0)
             {
                 Console.WriteLine("There is no review submited yet");
                 HoldScreen();//to hold the screen ...
                 return;//to stop the method .
             }
             //to display all the review submited to the reviewsStack ...
-            foreach(string review in reviewsStack)
+            foreach (string review in reviewsStack)
             {
                 Console.WriteLine($"{review}");
                 Console.WriteLine("----------------------");
@@ -1145,7 +1145,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Delete process stoped");
                 HoldScreen();//just to hold a second ...
             }
-    
+
         }
         //6.7. Search for account ...
         public static void SearchAccount()
@@ -1175,7 +1175,7 @@ namespace MiniProjectBankSystem
         public static void ShowTotalBankBalance()
         {
             //to check if there is a balance store or not ...
-            if(balances.Count == 0)
+            if (balances.Count == 0)
             {
                 Console.WriteLine("There is no balance stored yet!");
                 HoldScreen();//just to hold a second ...
@@ -1184,7 +1184,7 @@ namespace MiniProjectBankSystem
             //variable to store the sum of all balance ... 
             double TotalBalance = 0;
             //to loop on all balance ...
-            for(int i = 0; i < balances.Count; i++)
+            for (int i = 0; i < balances.Count; i++)
             {
                 TotalBalance = TotalBalance + balances[i];
             }
@@ -1238,7 +1238,7 @@ namespace MiniProjectBankSystem
                         writer.WriteLine($"Account Number: {accountNumbers[i]}, " +
                                          $"User Name: {accountUserNames[i]}, " +
                                          $"National ID: {nationalID[i]}, " +
-                                         $"Balance: {balances[i]}"+
+                                         $"Balance: {balances[i]}" +
                                          $"\n----------------------");
                     }
                 }
@@ -1305,7 +1305,7 @@ namespace MiniProjectBankSystem
                 return;
             }
             Console.WriteLine("All Transactions:");
-            Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");            
+            Console.WriteLine("Account Number \t\t Type \t\t Amount \t\t Balance After Transaction \t\t Date");
             for (int i = 0; i < transactionAccountNumbers.Count; i++)
             {
                 Console.WriteLine($"{transactionAccountNumbers[i]} \t\t" +
@@ -1330,7 +1330,7 @@ namespace MiniProjectBankSystem
             //to calculate the average feedback score ...
             double totalScore = 0;
             int count = Ratings.Count;
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 totalScore += Ratings[i];
             }
@@ -1376,7 +1376,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine($"Loan created successfully for: {RequestDteials[0]}\n");
                 HoldScreen();//to hold the screen ...
             }
-            else 
+            else
             {
                 Console.WriteLine("Loan request not approved.");
                 //to delete the request from the queue ...
@@ -1470,14 +1470,15 @@ namespace MiniProjectBankSystem
                 {
                     Console.WriteLine($"Enter your {message}:");
                     DoubleInput = double.Parse(Console.ReadLine());
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine($"{message} not accepted due to " + e.Message);
                     Console.WriteLine("please prass enter key to try again");
                     Console.ReadLine();
                     DoubleFlag = true;
                 }
-         
+
             } while (DoubleFlag);
             //to return tne char input ...
             return DoubleInput;
@@ -1527,7 +1528,7 @@ namespace MiniProjectBankSystem
         public static bool CheckAccountNumberExist(int accountNum)
         {
             bool result = false;
-            for(int i = 0; i < accountNumbers.Count; i++)
+            for (int i = 0; i < accountNumbers.Count; i++)
             {
                 if (accountNumbers[i] == accountNum)
                 {
@@ -1692,7 +1693,7 @@ namespace MiniProjectBankSystem
                 LockedAccounts.Add(nationalID);
                 HoldScreen();
                 return isNotLocked = false; //to stop the loop ...
-                
+
             }
             else
             {
@@ -1844,7 +1845,7 @@ namespace MiniProjectBankSystem
                         return; //to stop the method ...
                     }
                 }
-                if(UserType == 'U' || UserType == 'u')
+                if (UserType == 'U' || UserType == 'u')
                 {
                     //to check if the user national id and password is exist in the user list ...
                     for (int i = 0; i < LoginUserNationalID.Count; i++)
@@ -1865,10 +1866,10 @@ namespace MiniProjectBankSystem
 
 
                 }
-                else if(UserType == 'A' || UserType == 'a')
+                else if (UserType == 'A' || UserType == 'a')
                 {
                     //to check if the user national id and password is exist in the admin list ...
-                    for(int i = 0; i < LoginAdminNationalID.Count; i++)
+                    for (int i = 0; i < LoginAdminNationalID.Count; i++)
                     {
                         if (LoginAdminNationalID[i] == UserNationalID &&
                             VerifyPasswordPBKDF2(UserPassword, LoginAdminPassword[i]))
@@ -1889,7 +1890,7 @@ namespace MiniProjectBankSystem
                     HoldScreen();
                     continue; //to continue the loop ...
                 }
-            } while(isNotLocked);//to loop until the user enter correct national id and password ... 
+            } while (isNotLocked);//to loop until the user enter correct national id and password ... 
         }
         //8.3. WelcomeMessage method ...
         public static void WelcomeMessage()
@@ -2440,7 +2441,7 @@ namespace MiniProjectBankSystem
             //to loop on all nationalID list ...
             for (int i = 0; i < nationalID.Count; i++)
             {
-                if(nationalIDSearch == nationalID[i])
+                if (nationalIDSearch == nationalID[i])
                 {
                     Console.WriteLine("Account information:");
                     Console.WriteLine($"Account number: {accountNumbers[i]}");
@@ -2450,7 +2451,7 @@ namespace MiniProjectBankSystem
                     break;
                 }
             }
-            if(FoundFlag)
+            if (FoundFlag)
             {
                 Console.WriteLine("There is no account with this national ID");
                 HoldScreen();//just to hold second ...
@@ -2691,7 +2692,7 @@ namespace MiniProjectBankSystem
             }
         }
         //8.33. LoadActiveLoansFromFile method ...
-        public static void LoadActiveLoansFromFile() 
+        public static void LoadActiveLoansFromFile()
         {
             try
             {
@@ -2741,8 +2742,8 @@ namespace MiniProjectBankSystem
             {
                 //to get the date for the consultation from the user ...
                 consultationDate = DateTimeValidation("consultation date");
-                // Check if the date is in the future or today
-                if (consultationDate.Date > DateTime.Now.Date)
+                // Check if the date is in the past or not ...
+                if (consultationDate.Date < DateTime.Now.Date)
                 {
                     Console.WriteLine($"consultation date should be a date valid.");
                     HoldScreen(); // just to hold a second
@@ -2807,4 +2808,5 @@ namespace MiniProjectBankSystem
             }
 
         }
+    }
 }
