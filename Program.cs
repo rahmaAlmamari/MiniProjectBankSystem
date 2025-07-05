@@ -95,6 +95,8 @@ namespace MiniProjectBankSystem
         const string RequestConsultationFilePath = "RequestConsultation.txt";
         //2.34. to store ConsultationDate to list ...
         static List<string> ConsultationDate = new List<string>();
+        //2.35. ActiveConsultationFilePath to store ActiveConsultation.txt path
+        const string ActiveConsultationFilePath = "ActiveConsultation.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -2855,6 +2857,34 @@ namespace MiniProjectBankSystem
                 HoldScreen();
             }
 
+        }
+        //8.37. SaveActiveConsultationToFile method ...
+        public static void SaveActiveConsultationToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(ActiveConsultationFilePath))
+                {
+                    for (int i = 0; i < ActiveConsultation.Count; i++)
+                    {
+                        //to compaine all the end user data which store in 4 lists
+                        //together in one varible and give it to writer to wrote
+                        //in AccountsFilePath
+                        string dataLine = $"{ActiveConsultation[i]},{ConsultationDate[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine("Active consultations saved successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving active consultations.");
+                HoldScreen();//just to hold a second ...
+            }
         }
     }
 }
