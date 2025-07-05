@@ -961,6 +961,7 @@ namespace MiniProjectBankSystem
             Console.WriteLine("1. Request a Loan");
             Console.WriteLine("2. Check Loan Status");
             Console.WriteLine("3. Account Consultation");
+            Console.WriteLine("4. Check Account Consultation Status");
             //to get and validate user input ...
             service = CharValidation("service (1,2,3)");
             switch (service)
@@ -973,6 +974,9 @@ namespace MiniProjectBankSystem
                     break;
                 case '3': //to call AccountConsultation method ...
                     AccountConsultation(id);
+                    break;
+                case '4': //to call CheckAccountConsultationStatus method ...
+                    //CheckAccountConsultationStatus(id);
                     break;
                 default:
                     Console.WriteLine("Invalid service choice.");
