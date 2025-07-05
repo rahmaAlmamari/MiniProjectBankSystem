@@ -89,8 +89,10 @@ namespace MiniProjectBankSystem
         const string ActiveLoansFilePath = "ActiveLoans.txt";
         //2.31. to store ActiveConsultation to list ...
         static List<string> ActiveConsultation = new List<string>();
-        //2.32. to store RequestActiveConsultation to queue ...
-        static Queue<string> RequestActiveConsultation = new Queue<string>();
+        //2.32. to store RequestConsultation to queue ...
+        static Queue<string> RequestConsultation = new Queue<string>();
+        //2.33. RequestConsultationFilePath to store RequestConsultation.txt path
+        const string RequestConsultationFilePath = "RequestConsultation.txt";
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -2743,13 +2745,62 @@ namespace MiniProjectBankSystem
                     DateTimeFlag = true; // ask user again
                 }
             } while (DateTimeFlag);
-            //to add the user national id to the RequestActiveConsultation qeue ...
+            //to add the user national id to the RequestConsultation qeue ...
             string request = $"{id}|{consultationDate.ToString("yyyy-MM-dd HH:mm:ss")}";
-            RequestActiveConsultation.Enqueue(request);
+            RequestConsultation.Enqueue(request);
             Console.WriteLine("Your request for a consultation has been submitted successfully.");
             HoldScreen();//just to hold a second ...
 
         }
+        //8.35. SaveRequestActiveConsultationToFile method ...
+        public static void SaveRequestConsultationToFile()
+        {
+            try
+            {
+                //we do not check if the file exist or not becouse 
+                //StreamWriter will create the file in the same path we put 
+                //if he do not found it 
+                using (StreamWriter writer = new StreamWriter(RequestConsultationFilePath))
+                {
+                    foreach (var request in RequestConsultation)
+                    {
+                        writer.WriteLine(request);
+                    }
+                }
+                Console.WriteLine("Request consultation saved successfully.");
+                HoldScreen();//just to hold a second ...
+            }
+            catch
+            {
+                Console.WriteLine("Error saving request consultation.");
+                HoldScreen();//just to hold a second ...
+            }
+        }
+        //8.36. LoadRequestConsultationFromFile method ...
+        public static void LoadRequestConsultationFromFile()
+        {
+            try
+            {
+                if (!File.Exists(RequestConsultationFilePath)) return;
+                using (StreamReader reader = new StreamReader(RequestConsultationFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // Skip empty lines
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        RequestConsultation.Enqueue(line);
+                    }
+                }
+                Console.WriteLine("Requests consultations loaded successfully.");
+                HoldScreen();
+            }
+            catch
+            {
+                Console.WriteLine("Error loading requests consultations.");
+                HoldScreen();
+            }
 
-    }
+        }
 }
