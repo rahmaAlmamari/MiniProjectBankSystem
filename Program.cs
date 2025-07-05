@@ -93,6 +93,8 @@ namespace MiniProjectBankSystem
         static Queue<string> RequestConsultation = new Queue<string>();
         //2.33. RequestConsultationFilePath to store RequestConsultation.txt path
         const string RequestConsultationFilePath = "RequestConsultation.txt";
+        //2.34. to store ConsultationDate to list ...
+        static List<string> ConsultationDate = new List<string>();
 
         //============================== 2. Main method ========================
         static void Main(string[] args)
@@ -298,6 +300,7 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("12. Print All Transactions");
                 Console.WriteLine("13. View Average Feedback Score");
                 Console.WriteLine("14. Approve reguests for loan");
+                Console.WriteLine("15. Approve reguests for account consultation");
                 Console.WriteLine("0. Exsit");
                 //to call CharValidation to get and validate user input ...
                 string AdmainMenuRunOption = StringValidation("option");
@@ -358,6 +361,10 @@ namespace MiniProjectBankSystem
 
                     case "14"://to call ApproveReguestsForLoan method ...
                         ApproveReguestsForLoan();
+                        break;
+
+                    case "15"://to call ApproveReguestsForAccountConsultation method ...
+                        ApproveReguestsForAccountConsultation();
                         break;
 
                     case "0"://to exsit AdmainMenuRun ...
@@ -1381,6 +1388,46 @@ namespace MiniProjectBankSystem
                 Console.WriteLine("Loan request not approved.");
                 //to delete the request from the queue ...
                 RequestLoanQueue.Dequeue();
+                HoldScreen();//to hold the screen ...
+            }
+        }
+        //6.15. ApproveReguestsForAccountConsultation method ...
+        public static void ApproveReguestsForAccountConsultation()
+        {
+            //to check if there are request or not ...
+            if (RequestConsultation.Count == 0)
+            {
+                Console.WriteLine("There is no request submited yet");
+                HoldScreen();//to hold the screen ...
+                return;//to stop the method ...
+            }
+            //to get first request submited to RequestAccountConsultationQueue queue ...
+            string request = RequestConsultation.Dequeue();
+            string[] RequestDteials = request.Split('|').ToArray();
+            //to get user index using nationalID ...
+            int userIndex = nationalID.IndexOf(RequestDteials[0]);
+            //to display the first request in the queue ...
+            Console.WriteLine("The first request in queue:");
+            Console.WriteLine($"User Name: {accountUserNames[userIndex]}\n" +
+                              $"User National ID: {RequestDteials[0]}\n" +
+                              $"Initial Balance: {balances[userIndex]}\n" +
+                              $"User Phone Number: {accountPhoneNumbers[userIndex]}\n" +
+                              $"User Address:{accountAddresses[userIndex]}\n +" +
+                              $"Consultation Date:{RequestDteials[1]}");
+            bool action = ConfirmAction("approved this account consultation request");
+            if (action)
+            {
+                Console.WriteLine($"Account consultation approved for: {RequestDteials[0]}\n");
+                //to store the consultation details in the lists ...
+                ActiveConsultation.Add(RequestDteials[0]);
+                ConsultationDate.Add(RequestDteials[1]);
+                HoldScreen();//to hold the screen ...
+            }
+            else
+            {
+                Console.WriteLine("Account consultation request not approved.");
+                //to delete the request from the queue ...
+                RequestConsultation.Dequeue();
                 HoldScreen();//to hold the screen ...
             }
         }
