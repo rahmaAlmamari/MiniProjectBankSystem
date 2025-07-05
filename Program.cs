@@ -114,6 +114,8 @@ namespace MiniProjectBankSystem
             LoadRatingsFromFile();
             //to load the RequestLoan from the file and store it into the RequestLoanQueue ...
             LoadRequestLoanFromFile();
+            //to load the active loans from the file and store it into the activeLoans list ...
+            LoadActiveLoansFromFile();
             //to keep the system runs until user choose to closed the system ...
             bool MainRun = true;//to stop main method ...
             while (MainRun)
@@ -156,6 +158,8 @@ namespace MiniProjectBankSystem
                         SaveRatingsToFile();
                         //to save RequestLoan to the file ...
                         SaveRequestLoanToFile();
+                        //to save active loans to the file ...
+                        SaveActiveLoansToFile();
                         Console.WriteLine("Have a nice day (^0^)");
                         MainRun = false;//to stop the while loop ...
                         break;
@@ -1357,10 +1361,17 @@ namespace MiniProjectBankSystem
                 activeLoans.Add(RequestDteials[0]);
                 loanInterest.Add(interestRate);
                 loanAmounts.Add(Convert.ToDouble(RequestDteials[1]));//to convert RequestDteials from string to double ...
-
+                //to add the loan into user balance ...
+                balances[userIndex] += Convert.ToDouble(RequestDteials[1]);//to convert RequestDteials from string to double ...
                 Console.WriteLine($"Loan created successfully for: {RequestDteials[0]}\n");
                 HoldScreen();//to hold the screen ...
-
+            }
+            else 
+            {
+                Console.WriteLine("Loan request not approved.");
+                //to delete the request from the queue ...
+                RequestLoanQueue.Dequeue();
+                HoldScreen();//to hold the screen ...
             }
         }
 
@@ -2689,7 +2700,10 @@ namespace MiniProjectBankSystem
                     while ((line = reader.ReadLine()) != null)
                     {
                         //to add the information to the list ...
-                        activeLoans.Add(line);
+                        string[] parts = line.Split(',');
+                        activeLoans.Add(parts[0]);
+                        loanAmounts.Add(double.Parse(parts[1]));
+                        loanInterest.Add(double.Parse(parts[2]));
                     }
                 }
                 Console.WriteLine("Active loans loaded successfully.");
