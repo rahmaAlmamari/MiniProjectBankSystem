@@ -1,11 +1,11 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="27.2.0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="27.2.0" pages="2">
   <diagram name="Page-1" id="dzfVKB1yosHmG_hDHR0C">
-    <mxGraphModel dx="4074" dy="2317" grid="0" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1671" dy="3394" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="RfrmE-4vsHcAyxVlg1d9-1" value="&lt;font style=&quot;color: rgb(102, 0, 0); font-size: 72px;&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;&quot;&gt;Mini Bank System&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="510" y="38" width="694" height="50" as="geometry" />
+        <mxCell id="RfrmE-4vsHcAyxVlg1d9-1" value="&lt;font style=&quot;color: rgb(102, 0, 0); font-size: 72px;&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;&quot;&gt;Mini Bank System - Use Case Diagram&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="72.62" width="1525" height="50" as="geometry" />
         </mxCell>
         <mxCell id="RfrmE-4vsHcAyxVlg1d9-3" value="" style="rounded=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;fillColor=#CDE7FF;" vertex="1" parent="1">
           <mxGeometry x="236.75" y="114" width="1196.75" height="2040" as="geometry" />
@@ -315,6 +315,20 @@
             <mxPoint x="1530" y="1160" as="sourcePoint" />
             <mxPoint x="550" y="750" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="w6YnBTCW0rvJG-JeiRne" name="Page-2">
+    <mxGraphModel dx="836" dy="1147" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="v47Y5rncs2J2Nctxpbsa-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="44" y="88" width="132" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="v47Y5rncs2J2Nctxpbsa-2" value="Text" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="374" y="506" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
